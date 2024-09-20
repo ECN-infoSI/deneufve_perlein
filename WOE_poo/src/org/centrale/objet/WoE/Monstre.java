@@ -4,6 +4,7 @@
  */
 package org.centrale.objet.WoE;
 
+import java.util.Random;
 import java.util.logging.Logger;
 
 /**
@@ -101,7 +102,13 @@ public class Monstre {
         System.out.println("Portée de parade = " + pagePar);
         pos.affiche();
     }
-    public void deplace(int dx, int dy){
+
+    public void deplace(int taille){
+        //à améliorer pour ne pas sortir de la map et ne pas entrer en collision
+        Random gen = new Random() ; 
+        int dx = gen.nextInt(2) - 1 ; 
+        int dy = gen.nextInt(2) - 1 ; 
+        
         pos.translate(dx, dy);
     }
 }
