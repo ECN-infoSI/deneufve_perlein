@@ -18,54 +18,15 @@ public class WoECN {
         Lapin bugs2 = new Lapin();
         Loup wolfie = new Loup();
         Guerrier grosBill = new Guerrier();
+        PotionSoin p1 = new PotionSoin();
+        PotionSoin p2 = new PotionSoin();
         //pour que guillaumeT soit une réelle copie 
         Archer guillaumeT = new Archer(hog_rider);
         int taille = 1000;
-        World w =  new World(hog_rider, peon, bugs, bugs2, wolfie, grosBill, guillaumeT, taille);
+        World w =  new World(hog_rider, peon, bugs, bugs2, wolfie, grosBill, guillaumeT, p1, p2, taille);
         w.creeMondeAlea();
         
-        System.out.println("position des Mobs:");
-        System.out.println("Hog_rider:");
-        hog_rider.getPos().affiche();
-        System.out.println("Peon:");
-        peon.getPos().affiche();
-        System.out.println("Buggs:");
-        bugs.getPos().affiche();
-        System.out.println("Buggs2:");
-        bugs2.getPos().affiche();  // Nouvelle ligne pour afficher la position de bugs2
-        System.out.println("Wolfie:");
-        wolfie.getPos().affiche();  // Nouvelle ligne pour afficher la position de wolfie
-        System.out.println("GrosBill:");
-        grosBill.getPos().affiche();  // Nouvelle ligne pour afficher la position de grosBill
-        System.out.println("GuillaumeT:");
-        guillaumeT.getPos().affiche();  // Nouvelle ligne pour afficher la position de guillaumeT
-
-        // Déplacement des objets
-        hog_rider.deplace(taille);
-        peon.deplace(taille);
-        bugs.deplace(taille);
-        bugs2.deplace(taille);  // Nouvelle ligne pour déplacer bugs2
-        wolfie.deplace(taille);  // Nouvelle ligne pour déplacer wolfie
-        grosBill.deplace(taille);  // Nouvelle ligne pour déplacer grosBill
-        guillaumeT.deplace(taille);  // Nouvelle ligne pour déplacer guillaumeT
-
-        System.out.println("position des Mobs:");
-        System.out.println("Hog_rider:");
-        hog_rider.getPos().affiche();
-        System.out.println("Peon:");
-        peon.getPos().affiche();
-        System.out.println("Buggs:");
-        bugs.getPos().affiche();
-        System.out.println("Buggs2:");
-        bugs2.getPos().affiche();  // Nouvelle ligne pour afficher la position de bugs2 après déplacement
-        System.out.println("Wolfie:");
-        wolfie.getPos().affiche();  // Nouvelle ligne pour afficher la position de wolfie après déplacement
-        System.out.println("GrosBill:");
-        grosBill.getPos().affiche();  // Nouvelle ligne pour afficher la position de grosBill après déplacement
-        System.out.println("GuillaumeT:");
-        guillaumeT.getPos().affiche();  // Nouvelle ligne pour afficher la position de guillaumeT après déplacement
-
-        // Autre méthode: Création d'une liste de créatures
+        // Test: Déplacement des objets
         List<Creature> creatures = new ArrayList<>();
         // Ajout des créatures à la liste
         creatures.add(hog_rider);
@@ -83,7 +44,7 @@ public class WoECN {
         }
         // Déplacement de toutes les créatures
         for (Creature creature : creatures) {
-            creature.deplace(taille);
+            creature.deplace(taille, p1, p2);
         }
         // Affichage des positions après déplacement
         System.out.println("position des Mobs après déplacement:");
@@ -91,5 +52,17 @@ public class WoECN {
             System.out.println(creature.getClass().getSimpleName() + ":");
             creature.getPos().affiche();
         }
+        // Test: Combat CàC: grosBill attaque bugs1
+        bugs.affiche();
+        grosBill.setPos(new Point2D(bugs.getPos().getxpoint(),bugs.getPos().getypoint()+1)); //on place grosBill à coté
+        //possibilité de créer une deuxième méthode setPos qui prends en entrée deux int pour simplifier là commande ci-dessus
+        grosBill.combattre(bugs);
+        bugs.affiche();
+        // Test: Combat à distance: guillaumeT attaque wolfie
+        wolfie.affiche();
+        grosBill.setPos(new Point2D(wolfie.getPos().getxpoint(),wolfie.getPos().getypoint()+2)); //on place guillaumeT à 2 cases 
+        //possibilité de créer une deuxième méthode setPos qui prends en entrée deux int pour simplifier là commande ci-dessus
+        guillaumeT.combattre(wolfie);
+        wolfie.affiche();
     }
 }
