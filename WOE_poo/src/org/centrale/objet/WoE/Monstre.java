@@ -4,111 +4,30 @@
  */
 package org.centrale.objet.WoE;
 
-import java.util.Random;
-import java.util.logging.Logger;
-
 /**
  *
  * @author benja
  */
-public class Monstre {
+public class Monstre extends Creature {
     
-    private int ptVie;   
-    private int degAtt;
-    private int ptPar;
-    private int pageAtt;
-    private int pagePar;
-    private Point2D pos;
-
     public Monstre(int ptVie, int degAtt, int ptPar, int pageAtt, int pagePar, Point2D pos) {
-        this.ptVie = ptVie;
-        this.degAtt = degAtt;
-        this.ptPar = ptPar;
-        this.pageAtt = pageAtt;
-        this.pagePar = pagePar;
-        this.pos = pos;
+        super(ptVie,degAtt,ptPar,pageAtt,pagePar,pos);
     }
     
     public Monstre(Monstre m){
-        ptVie = m.ptVie;
-        degAtt = m.degAtt;
-        ptPar= m.ptPar;
-        pageAtt = m.pageAtt;
-        pagePar= m.pagePar;
-        pos = m.pos;        
-    }
-    public Monstre(){
-        ptVie = 0;
-        degAtt = 0;
-        ptPar= 0;
-        pageAtt = 0;
-        pagePar= 0;
-        pos = new Point2D(0,0);        
-    }
-
-    public int getPtVie() {
-        return ptVie;
-    }
-
-    public int getDegAtt() {
-        return degAtt;
-    }
-
-    public int getPtPar() {
-        return ptPar;
-    }
-
-    public int getPageAtt() {
-        return pageAtt;
-    }
-
-    public int getPagePar() {
-        return pagePar;
-    }
-
-    public Point2D getPos() {
-        return pos;
-    }
-
-    public void setPtVie(int ptVie) {
-        this.ptVie = ptVie;
-    }
-
-    public void setDegAtt(int degAtt) {
-        this.degAtt = degAtt;
-    }
-
-    public void setPtPar(int ptPar) {
-        this.ptPar = ptPar;
-    }
-
-    public void setPageAtt(int pageAtt) {
-        this.pageAtt = pageAtt;
-    }
-
-    public void setPagePar(int pagePar) {
-        this.pagePar = pagePar;
-    }
-
-    public void setPos(Point2D pos) {
-        this.pos = pos;
+        super((Creature)m);       
     }
     
-    public void affiche(){
-        System.out.println("Point de vie = " + ptVie);
-        System.out.println("Degat d'attaque = " + degAtt);
-        System.out.println("Points de parade = " + ptPar);
-        System.out.println("Portée d'attaque = " + pageAtt);
-        System.out.println("Portée de parade = " + pagePar);
-        pos.affiche();
+    public Monstre(){
+        super();       
     }
 
-    public void deplace(int taille){
-        //à améliorer pour ne pas sortir de la map et ne pas entrer en collision
-        Random gen = new Random() ; 
-        int dx = gen.nextInt(2) - 1 ; 
-        int dy = gen.nextInt(2) - 1 ; 
-        
-        pos.translate(dx, dy);
+public void affiche(){
+        System.out.println("Point de vie = " + super.getPtVie());
+        System.out.println("Degat d'attaque = " + super.getDegAtt());
+        System.out.println("Points de parade = " + super.getPtPar());
+        System.out.println("Portée d'attaque = " + super.getPageAtt());
+        System.out.println("Portée de parade = " + super.getPagePar());
+        super.getPos().affiche();
     }
 }
