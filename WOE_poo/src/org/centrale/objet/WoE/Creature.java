@@ -4,9 +4,10 @@
  */
 package org.centrale.objet.WoE;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
-import org.centrale.objet.WoE.Point2D;
-
 /**
  *
  * @author benja
@@ -93,13 +94,22 @@ public class Creature {
         public void setPos(Point2D pos) {
             this.pos = pos;
         }
-
-    public void deplace(int taille){
-        //à améliorer pour ne pas sortir de la map et ne pas entrer en collision
+ 
+    public void deplace(int taille, LinkedList<Objet> objets){
+        // on prends les objets disponibles en argument
+        
         Random gen = new Random() ; 
         int dx = gen.nextInt(2) - 1 ; 
         int dy = gen.nextInt(2) - 1 ; 
         
         pos.translate(dx, dy);
+        for (Objet o : objets) {
+            if (pos.equals(o.getPos()) && (o instanceof PotionSoin)){
+                PotionSoin p = (PotionSoin) o;
+                ptVie+=p.getSoin();
+                p.disparait();
+                objets.remove(o);
+            }           
+        }
     }
 }
