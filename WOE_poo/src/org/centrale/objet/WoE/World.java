@@ -6,6 +6,8 @@ package org.centrale.objet.WoE;
 import java.util.LinkedList;
 import java.util.Random ;
 /**
+ * Représente le monde du jeu, contenant différentes entités comme des personnages
+ * et des créatures.
  *
  * @author benja
  */
@@ -24,6 +26,10 @@ public class World {
         this.taille = taille;            
     }
 
+    /**
+     * Constructeur par défaut, crée un monde avec des entités par défaut
+     * et une taille de 1000.
+     */
     public World() {
         this.personnages = new LinkedList<>();
         this.monstres = new LinkedList<>();
@@ -142,7 +148,10 @@ public class World {
     }
     
     
-    
+    /**
+     * Crée des positions aléatoires pour chaque entité dans le monde.
+     * Chaque position est unique et dans les limites de la taille du monde.
+     */
     public Point2D[] creeMondeAlea() {
         Random random = new Random();
         Point2D[] positions = new Point2D[personnages.size()+monstres.size()+objets.size()];
@@ -183,6 +192,9 @@ public class World {
     public void tourDeJeu(){
     }
     
+    /**
+     * Affiche les informations du monde, y compris les entités et la taille.
+     */
     public void afficheWorld() {
         System.out.println("Personnages :");
         for (Personnage p : personnages) {

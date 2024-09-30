@@ -5,34 +5,67 @@
 package org.centrale.objet.WoE;
 
 /**
+ * Représente une potion de soin dans le jeu.
+ * Hérite de la classe {@link Objet}.
  *
  * @author ASUS
  */
 public class PotionSoin extends Objet {
     private int soin ; 
 
-    public PotionSoin(String n, String s, int p, int d) {
-        super(n,s,p) ; 
+    /**
+     * Constructeur pour créer une potion de soin avec un nom, une description,
+     * un prix et un montant de soin.
+     * 
+     * @param n le nom de la potion
+     * @param s la description de la potion
+     * @param p le prix de la potion
+     * @param d le montant de soin
+     */
+    public PotionSoin(String n, String s, int pds, Point2D pos, int d) {
+        super(n,s,pds,pos) ; 
         this.soin = d ;
     }
     
+    /**
+     * Constructeur pour créer une potion de soin à partir d'un objet existant
+     * et d'un montant de soin.
+     * 
+     * @param o l'objet à copier
+     * @param d le montant de soin
+     */
     public PotionSoin(Objet o, int d) {
         super(o) ; 
         this.soin = d ; 
     }
     
+    /**
+     * Constructeur par défaut pour créer une potion de soin sans spécifications.
+     */
     public PotionSoin() {
         super() ; 
         this.soin = 0 ;  
     }
 
+    /**
+     * Obtient le montant de soin de la potion.
+     * 
+     * @return le montant de soin
+     */
     public int getSoin() {
         return soin;
     }
 
+    /**
+     * Définit le montant de soin de la potion.
+     * 
+     * @param soin le nouveau montant de soin
+     */
     public void setSoin(int soin) {
         this.soin = soin;
     }
     
-    
+    public void disparait(){
+        super.setPos(null); 
+    }
 }
