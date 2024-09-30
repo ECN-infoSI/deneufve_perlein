@@ -140,7 +140,7 @@ public class World {
      * Crée des positions aléatoires pour chaque entité dans le monde.
      * Chaque position est unique et dans les limites de la taille du monde.
      */
-    public Point2D[] creeMondeAlea() {
+    public void creeMondeAlea() {
         Random random = new Random();
         Point2D[] positions = new Point2D[personnages.size()+monstres.size()+objets.size()];
         boolean estUnique;
@@ -173,7 +173,6 @@ public class World {
         for (int i = 0; i < objets.size(); i++) {
             objets.get(i).setPos(positions[personnages.size() + monstres.size() + i]);
         }
-            return positions;
         }
     
     
@@ -199,4 +198,15 @@ public class World {
             System.out.println(o);
         }
     }
+    
+    public void etatPersonnages(LinkedList<Personnage> personnages) {
+        int totalPointsDeVie = 0; // Variable pour stocker le total des points de vie
+        for (int i = 0; i < personnages.size(); i++) {
+            Personnage personnage = personnages.get(i);
+            System.out.println("Personnage " + (i + 1) + ": " + personnage.toString());
+            totalPointsDeVie += personnage.getPtVie(); 
+        }
+        System.out.println("Total des points de vie de tous les personnages: " + totalPointsDeVie);
+    }
+    
 }

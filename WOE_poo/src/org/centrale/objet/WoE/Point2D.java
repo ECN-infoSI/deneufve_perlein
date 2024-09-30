@@ -47,7 +47,7 @@ public class Point2D {
      * 
      * @param xpos la nouvelle coordonnée x
      */
-    public void setxPoint2D(int xpos) {
+    public void setx(int xpos) {
         x = xpos;
     }
     
@@ -56,7 +56,7 @@ public class Point2D {
      * 
      * @param ypos la nouvelle coordonnée y
      */
-    public void setyPoint2D(int ypos) {
+    public void sety(int ypos) {
         y = ypos;
     }
 
@@ -65,7 +65,7 @@ public class Point2D {
      * 
      * @return la coordonnée x
      */
-    public int getxpoint() {
+    public int getx() {
         return x;
     }
 
@@ -74,7 +74,7 @@ public class Point2D {
      * 
      * @return la coordonnée y
      */
-    public int getypoint() {
+    public int gety() {
         return y;
     }
 

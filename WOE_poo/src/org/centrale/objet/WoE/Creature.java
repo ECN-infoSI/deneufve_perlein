@@ -200,26 +200,50 @@ public class Creature {
      * 
      * @param taille Taille du monde.
      */ 
-    public void deplace(int taille, LinkedList<Objet> objets){
-        // on prends les objets disponibles en argument
-        
+    
+    public void deplace(int taille, LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets) {
         Random gen = new Random() ; 
         int dx = gen.nextInt(2) - 1 ; 
         int dy = gen.nextInt(2) - 1 ;
-        pos.translate(dx, dy);
-        if (pos.getxpoint() > taille) { pos.setxPoint2D(taille); }
-        if (pos.getxpoint() < 0) { pos.setxPoint2D(0); }
-        if (pos.getypoint() > taille) { pos.setyPoint2D(taille); }
-        if (pos.getypoint() < 0) { pos.setyPoint2D(0); }
+        Point2D nouvellePos = new Point2D(pos.getx() + dx, pos.gety() + dy);
+
+        // Vérification des limites de la carte
+        if (nouvellePos.getx() < 0 || nouvellePos.getx() >= taille ||
+            nouvellePos.gety() < 0 || nouvellePos.gety() >= taille) {
+            System.out.println("Déplacement impossible : hors des limites de la Map.");
+            return; // Ne pas déplacer si en dehors des limites
+        }
+        // Vérification des collisions avec les autres personnages
+        for (Personnage p : personnages) {
+            if (!p.equals(this) && p.getPosition().equals(nouvellePos)) {
+                System.out.println("Déplacement impossible : collision avec un Personnage");
+                return; // Ne pas déplacer si un personnage est déjà à cette position
+            }
+        }
+        // Vérification des collisions avec les monstres
+        for (Monstre m : monstres) {
+            if (m.getPosition().equals(nouvellePos)) {
+                System.out.println("Déplacement impossible : un monstre se trouve à cette position.");
+                return; // Ne pas déplacer si un monstre est déjà à cette position
+            }
+        }
+        // Si toutes les vérifications passent, on déplace le personnage
+        pos = nouvellePos; // Mise à jour de la position
+        System.out.println("Déplacement réussi vers la position : " + nouvellePos);
         
-        pos.translate(dx, dy);
         for (Objet o : objets) {
-            if (pos.equals(o.getPos()) && (o instanceof PotionSoin)){
-                PotionSoin p = (PotionSoin) o;
-                ptVie+=p.getSoin();
-                p.disparait();
-                objets.remove(o);
-            }           
+            if (nouvellePos.equals(o.getPos()) && (o instanceof PotionSoin)) {
+                PotionSoin p = (PotionSoin) o; 
+                ptVie += p.getSoin(); 
+                p.disparait(); // Faire disparaître la potion
+                objets.remove(o); // Retirer la potion de la liste
+                System.out.println("Potion de soin utilisée, points de vie : " + p.getSoin());
+            }
         }
     }
+    
+    public Point2D getPosition() {
+        return pos; // Retourne la position actuelle du personnage
+    }
+
 }
