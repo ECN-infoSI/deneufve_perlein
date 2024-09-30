@@ -31,22 +31,10 @@ public class World {
      * et une taille de 1000.
      */
     public World() {
-        this.personnages = new LinkedList<>();
-        this.monstres = new LinkedList<>();
-        this.objets = new LinkedList<>();
-        this.taille = 1000;
-
-        personnages.add(new Archer());
-        personnages.add(new Paysan());
-        personnages.add(new Guerrier());
-        personnages.add(new Archer());
-
-        monstres.add(new Lapin());
-        monstres.add(new Lapin());
-        monstres.add(new Loup());
-
-        objets.add(new PotionSoin());
-        objets.add(new PotionSoin());
+        this.personnages = creerPersonnagesAlea();
+        this.monstres = creerMonstresAlea();
+        this.objets = creerObjetsAlea();
+        this.taille = 50;
     }
 
     public LinkedList<Personnage> getPersonnages() {
@@ -81,7 +69,7 @@ public class World {
         this.taille = taille;
     }
       
-    public LinkedList<Personnage> creerPersonnagesAlea() {
+    private LinkedList<Personnage> creerPersonnagesAlea() {
         LinkedList<Personnage> persalea = new LinkedList<>();
         Random random = new Random();
         
@@ -107,7 +95,7 @@ public class World {
         return persalea;
     }
     
-    public LinkedList<Monstre> creerMonstresAlea() {
+    private LinkedList<Monstre> creerMonstresAlea() {
         LinkedList<Monstre> monstralea = new LinkedList<>();
         Random random = new Random();
         
@@ -127,7 +115,7 @@ public class World {
         return monstralea;
     }
     
-    public LinkedList<Objet> creerObjetsAlea() {
+    private LinkedList<Objet> creerObjetsAlea() {
         LinkedList<Objet> potionalea = new LinkedList<>();
         Random random = new Random();
         

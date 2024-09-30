@@ -21,6 +21,7 @@ public class Epee extends Objet {
      * @param n Nom de l'objet.
      * @param s Statut de l'objet.
      * @param pds Poids de l'objet.
+     * @param pos Position de l'objet.
      * @param d Dégâts de l'épée.
      */
     

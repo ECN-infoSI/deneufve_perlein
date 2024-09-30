@@ -21,6 +21,7 @@ public class PotionSoin extends Objet {
      * @param s la description de la potion
      * @param p le prix de la potion
      * @param d le montant de soin
+     * @param pos Position de l'objet.
      */
     public PotionSoin(String n, String s, int pds, Point2D pos, int d) {
         super(n,s,pds,pos) ; 

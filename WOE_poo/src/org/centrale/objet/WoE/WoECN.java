@@ -12,12 +12,7 @@ import java.util.List;
  */
 public class WoECN {
     public static void main(String[] args) {
-        World w1 =  new World();
-        LinkedList<Personnage> personnages = w1.creerPersonnagesAlea();
-        LinkedList<Monstre> monstres = w1.creerMonstresAlea();
-        LinkedList<Objet> objets = w1.creerObjetsAlea();
-        int taille = 1000;
-        World w = new World(personnages, monstres, objets, taille);
+        World w = new World();
         w.creeMondeAlea();
         
         // Test: Déplacement des objets
@@ -29,7 +24,7 @@ public class WoECN {
         }
         // Déplacement de toutes les créatures
         for (Creature creature : w.getPersonnages()) {
-            creature.deplace(taille, objets);
+            creature.deplace(w.getTaille(), w.getObjets());
         }
         // Affichage des positions après déplacement
         System.out.println("position des Mobs après déplacement:");

@@ -21,6 +21,7 @@ public class Objet {
      * @param n Nom de l'objet.
      * @param s Style de l'objet.
      * @param pds Poids de l'objet.
+     * @param pos Position de l'objet.
      */
     public Objet(String n, String s, int pds, Point2D p) {
         nom = n; 
