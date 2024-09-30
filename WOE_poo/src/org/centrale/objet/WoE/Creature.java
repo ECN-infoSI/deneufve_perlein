@@ -1,24 +1,51 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package org.centrale.objet.WoE;
 
 import java.util.Random;
-import org.centrale.objet.WoE.Point2D;
 
 /**
- *
- * @author benja
+ * Classe représentant une créature dans le jeu.
  */
 public class Creature {
-    private int ptVie;   
+    /**
+     * Points de vie de la créature.
+     */
+    private int ptVie;
+    
+    /**
+     * Dégâts d'une attaque.
+     */
     private int degAtt;
+    
+    /**
+     * Points de parade.
+     */
     private int ptPar;
+    
+    /**
+     * Pourcentage d'attaque.
+     */
     private int pageAtt;
+    
+    /**
+     * Pourcentage de parade.
+     */
     private int pagePar;
+    
+    /**
+     * Position de la créature.
+     */
     private Point2D pos;
 
+    /**
+     * Constructeur avec paramètres.
+     * 
+     * @param ptVie Points de vie.
+     * @param degAtt Dégâts d'une attaque.
+     * @param ptPar Points de parade.
+     * @param pageAtt Pourcentage d'attaque.
+     * @param pagePar Pourcentage de parade.
+     * @param pos Position.
+     */
     public Creature(int ptVie, int degAtt, int ptPar, int pageAtt, int pagePar, Point2D pos) {
         this.ptVie = ptVie;
         this.degAtt = degAtt;
@@ -27,79 +54,156 @@ public class Creature {
         this.pagePar = pagePar;
         this.pos = pos;
     }
-    
-    public Creature(Creature c){
+
+    /**
+     * Constructeur par copie.
+     * 
+     * @param c Créature à copier.
+     */
+    public Creature(Creature c) {
         ptVie = c.ptVie;
         degAtt = c.degAtt;
-        ptPar= c.ptPar;
+        ptPar = c.ptPar;
         pageAtt = c.pageAtt;
-        pagePar= c.pagePar;
-        pos = c.pos;        
+        pagePar = c.pagePar;
+        pos = c.pos;
     }
-    public Creature(){
+
+    /**
+     * Constructeur par défaut.
+     */
+    public Creature() {
         ptVie = 0;
         degAtt = 0;
-        ptPar= 0;
+        ptPar = 0;
         pageAtt = 0;
-        pagePar= 0;
-        pos = new Point2D(0,0);        
+        pagePar = 0;
+        pos = new Point2D(0, 0);
     }
 
-
+    /**
+     * Retourne les points de vie de la créature.
+     * 
+     * @return Points de vie.
+     */
     public int getPtVie() {
-            return ptVie;
-        }
+        return ptVie;
+    }
 
-        public int getDegAtt() {
-            return degAtt;
-        }
+    /**
+     * Retourne les dégâts d'une attaque.
+     * 
+     * @return Dégâts d'une attaque.
+     */
+    public int getDegAtt() {
+        return degAtt;
+    }
 
-        public int getPtPar() {
-            return ptPar;
-        }
+    /**
+     * Retourne les points de parade.
+     * 
+     * @return Points de parade.
+     */
+    public int getPtPar() {
+        return ptPar;
+    }
 
-        public int getPageAtt() {
-            return pageAtt;
-        }
+    /**
+     * Retourne le pourcentage d'attaque.
+     * 
+     * @return Pourcentage d'attaque.
+     */
+    public int getPageAtt() {
+        return pageAtt;
+    }
 
-        public int getPagePar() {
-            return pagePar;
-        }
+    /**
+     * Retourne le pourcentage de parade.
+     * 
+     * @return Pourcentage de parade.
+     */
+    public int getPagePar() {
+        return pagePar;
+    }
 
-        public Point2D getPos() {
-            return pos;
-        }
+    /**
+     * Retourne la position de la créature.
+     * 
+     * @return Position.
+     */
+    public Point2D getPos() {
+        return pos;
+    }
 
-        public void setPtVie(int ptVie) {
-            this.ptVie = ptVie;
-        }
+    /**
+     * Définit les points de vie de la créature.
+     * 
+     * @param ptVie Points de vie à définir.
+     */
+    public void setPtVie(int ptVie) {
+        this.ptVie = ptVie;
+    }
 
-        public void setDegAtt(int degAtt) {
-            this.degAtt = degAtt;
-        }
+    /**
+     * Définit les dégâts d'attaque.
+     * 
+     * @param degAtt Dégâts à définir.
+     */
+    public void setDegAtt(int degAtt) {
+        this.degAtt = degAtt;
+    }
 
-        public void setPtPar(int ptPar) {
-            this.ptPar = ptPar;
-        }
+    /**
+     * Définit les points de parade.
+     * 
+     * @param ptPar Points de parade à définir.
+     */
+    public void setPtPar(int ptPar) {
+        this.ptPar = ptPar;
+    }
 
-        public void setPageAtt(int pageAtt) {
-            this.pageAtt = pageAtt;
-        }
+    /**
+     * Définit le pourcentage d'attaque.
+     * 
+     * @param pageAtt Pourcentage d'attaque à définir.
+     */
+    public void setPageAtt(int pageAtt) {
+        this.pageAtt = pageAtt;
+    }
 
-        public void setPagePar(int pagePar) {
-            this.pagePar = pagePar;
-        }
+    /**
+     * Définit le pourcentage de parade.
+     * 
+     * @param pagePar Pourcentage de parade à définir.
+     */
+    public void setPagePar(int pagePar) {
+        this.pagePar = pagePar;
+    }
 
-        public void setPos(Point2D pos) {
-            this.pos = pos;
-        }
+    /**
+     * Définit la position de la créature.
+     * 
+     * @param pos Position à définir.
+     */
+    public void setPos(Point2D pos) {
+        this.pos = pos;
+    }
 
-    public void deplace(int taille){
-        //à améliorer pour ne pas sortir de la map et ne pas entrer en collision
-        Random gen = new Random() ; 
-        int dx = gen.nextInt(2) - 1 ; 
-        int dy = gen.nextInt(2) - 1 ; 
-        
+    /**
+     * Déplace la créature aléatoirement dans une zone de taille définie.
+     * 
+     * @param taille Taille du monde.
+     */
+    public void deplace(int taille) {
+        Random gen = new Random();
+        int dx = gen.nextInt(2) - 1;
+        int dy = gen.nextInt(2) - 1;
+
+        if (pos.getxpoint() == taille) { dx = dx - 1; }
+        if (pos.getxpoint() == 0) { dx = dx + 1; }
+        if (pos.getypoint() == taille) { dy = dy - 1; }
+        if (pos.getypoint() == 0) { dy = dy + 1; }
+
         pos.translate(dx, dy);
     }
 }
