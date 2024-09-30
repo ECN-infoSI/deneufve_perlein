@@ -15,19 +15,19 @@ public class WoECN {
         // Test: Déplacement des objets
         // Affichage des positions initiales de toutes les créatures
         System.out.println("position des Mobs:");
-        for (Creature creature : w.getPersonnages()) {
-            System.out.println(creature.getClass().getSimpleName() + ":");
-            creature.getPos().affiche();
+        for (Personnage perso : w.getPersonnages()) {
+            System.out.println(perso.getNom() + ":");
+            perso.getPos().affiche();
         }
         // Déplacement de toutes les créatures
-        for (Creature creature : w.getPersonnages()) {
-            creature.deplace(w.getTaille(), w.getPersonnages(), w.getMonstres(), w.getObjets()) ;
+        for (Personnage perso : w.getPersonnages()) {
+            perso.deplace(w.getTaille(), w.getPersonnages(), w.getMonstres(), w.getObjets()) ;
         }
         // Affichage des positions après déplacement
-        System.out.println("position des Mobs après déplacement:");
-        for (Creature creature : w.getPersonnages()) {
-            System.out.println(creature.getClass().getSimpleName() + ":");
-            creature.getPos().affiche();
+        System.out.println("position des Mobs apres deplacement:");
+        for (Personnage perso : w.getPersonnages()) {
+            System.out.println(perso.getNom() + ":");
+            perso.getPos().affiche();
         }
         
     }

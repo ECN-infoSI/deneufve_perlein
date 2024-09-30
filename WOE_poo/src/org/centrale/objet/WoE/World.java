@@ -31,10 +31,10 @@ public class World {
      * et une taille de 1000.
      */
     public World() {
+        this.taille = 50;
         this.personnages = creerPersonnagesAlea();
         this.monstres = creerMonstresAlea();
         this.objets = creerObjetsAlea();
-        this.taille = 50;
     }
 
     public LinkedList<Personnage> getPersonnages() {
@@ -73,9 +73,9 @@ public class World {
         LinkedList<Personnage> persalea = new LinkedList<>();
         Random random = new Random();
         
-        int nbArchers = random.nextInt(taille*taille/10);  // Pour que la map ne soit pas pleine de mobs
-        int nbPaysans = random.nextInt(taille*taille/10);  
-        int nbGuerriers = random.nextInt(taille*taille/10);
+        int nbArchers = random.nextInt(taille*taille/100);  // Pour que la map ne soit pas pleine de mobs
+        int nbPaysans = random.nextInt(taille*taille/100);  
+        int nbGuerriers = random.nextInt(taille*taille/100);
 
         for (int i = 0; i < nbArchers; i++) {
             Personnage archer = new Archer();
@@ -99,8 +99,8 @@ public class World {
         LinkedList<Monstre> monstralea = new LinkedList<>();
         Random random = new Random();
         
-        int nbLoups = random.nextInt(taille*taille/10);  // Pour que la map ne soit pas pleine de mobs
-        int nbLapins = random.nextInt(taille*taille/10);  
+        int nbLoups = random.nextInt(taille*taille/100);  // Pour que la map ne soit pas pleine de mobs
+        int nbLapins = random.nextInt(taille*taille/100);  
 
         for (int i = 0; i < nbLoups; i++) {
             Monstre loup = new Loup();
@@ -199,11 +199,14 @@ public class World {
         }
     }
     
+    /**
+     * Slide 12: parcourir la liste de personnage: on affiche leur nom et la somme des points de vie
+     */
     public void etatPersonnages(LinkedList<Personnage> personnages) {
-        int totalPointsDeVie = 0; // Variable pour stocker le total des points de vie
+        int totalPointsDeVie = 0; 
         for (int i = 0; i < personnages.size(); i++) {
             Personnage personnage = personnages.get(i);
-            System.out.println("Personnage " + (i + 1) + ": " + personnage.toString());
+            System.out.println("Personnage " + (i + 1) + ": " + personnage.getNom());
             totalPointsDeVie += personnage.getPtVie(); 
         }
         System.out.println("Total des points de vie de tous les personnages: " + totalPointsDeVie);
