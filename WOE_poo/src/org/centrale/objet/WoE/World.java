@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
+import java.util.LinkedList;
 import java.util.Random ;
 /**
  *
@@ -10,41 +11,141 @@ import java.util.Random ;
  */
 public class World {
     
-    public Archer hog_rider ; 
-    public Paysan peon ; 
-    public Lapin bugs ; 
-    public Lapin bugs2;
-    public Loup wolfie ;
-    public Guerrier grosBill ;
-    public Archer guillaumeT ;
-    public int taille ;
+    private LinkedList<Personnage> personnages;
+    private LinkedList<Monstre> monstres;
+    private LinkedList<Objet> objets;
+    private int taille ;
 
 
-    public World(Archer hog_rider, Paysan peon, Lapin bugs, Lapin bugs2, Loup wolfie, Guerrier grosBill, Archer guillaumeT, int taille) {
-        this.hog_rider = hog_rider;
-        this.peon = peon;
-        this.bugs = bugs;
-        this.taille = taille;
-        this.bugs2 = bugs2;
-        this.wolfie = wolfie;
-        this.grosBill = grosBill;
-        this.guillaumeT = guillaumeT;
+    public World(LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets, int taille) {
+        this.personnages = personnages;  
+        this.monstres = monstres;        
+        this.objets = objets;            
+        this.taille = taille;            
     }
 
     public World() {
-        this.hog_rider = new Archer();
-        this.peon = new Paysan();
-        this.bugs = new Lapin();
-        this.bugs2 = new Lapin();
-        this.wolfie = new Loup();
-        this.grosBill = new Guerrier();
-        this.guillaumeT = new Archer();
+        this.personnages = new LinkedList<>();
+        this.monstres = new LinkedList<>();
+        this.objets = new LinkedList<>();
         this.taille = 1000;
+
+        personnages.add(new Archer());
+        personnages.add(new Paysan());
+        personnages.add(new Guerrier());
+        personnages.add(new Archer());
+
+        monstres.add(new Lapin());
+        monstres.add(new Lapin());
+        monstres.add(new Loup());
+
+        objets.add(new PotionSoin());
+        objets.add(new PotionSoin());
+    }
+
+    public LinkedList<Personnage> getPersonnages() {
+        return personnages;
+    }
+
+    public LinkedList<Monstre> getMonstres() {
+        return monstres;
+    }
+
+    public LinkedList<Objet> getObjets() {
+        return objets;
+    }
+
+    public int getTaille() {
+        return taille;
+    }
+
+    public void setPersonnages(LinkedList<Personnage> personnages) {
+        this.personnages = personnages;
+    }
+
+    public void setMonstres(LinkedList<Monstre> monstres) {
+        this.monstres = monstres;
+    }
+
+    public void setObjets(LinkedList<Objet> objets) {
+        this.objets = objets;
+    }
+
+    public void setTaille(int taille) {
+        this.taille = taille;
+    }
+      
+    public LinkedList<Personnage> creerPersonnagesAlea() {
+        LinkedList<Personnage> persalea = new LinkedList<>();
+        Random random = new Random();
+        
+        int nbArchers = random.nextInt(taille*taille/10);  // Pour que la map ne soit pas pleine de mobs
+        int nbPaysans = random.nextInt(taille*taille/10);  
+        int nbGuerriers = random.nextInt(taille*taille/10);
+
+        for (int i = 0; i < nbArchers; i++) {
+            Personnage archer = new Archer();
+            persalea.add(archer); 
+        }
+
+        for (int i = 0; i < nbPaysans; i++) {
+            Personnage paysan = new Paysan();
+            persalea.add(paysan);
+        }
+
+        for (int i = 0; i < nbGuerriers; i++) {
+            Personnage guerrier = new Guerrier();
+            persalea.add(guerrier); 
+        }
+
+        return persalea;
     }
     
-    public void creeMondeAlea() {
+    public LinkedList<Monstre> creerMonstresAlea() {
+        LinkedList<Monstre> monstralea = new LinkedList<>();
         Random random = new Random();
-        Point2D[] positions = new Point2D[7];
+        
+        int nbLoups = random.nextInt(taille*taille/10);  // Pour que la map ne soit pas pleine de mobs
+        int nbLapins = random.nextInt(taille*taille/10);  
+
+        for (int i = 0; i < nbLoups; i++) {
+            Monstre loup = new Loup();
+            monstralea.add(loup); 
+        }
+
+        for (int i = 0; i < nbLapins; i++) {
+            Monstre lapin = new Lapin();
+            monstralea.add(lapin);
+        }
+
+        return monstralea;
+    }
+    
+    public LinkedList<Objet> creerObjetsAlea() {
+        LinkedList<Objet> potionalea = new LinkedList<>();
+        Random random = new Random();
+        
+        int nbPotion = random.nextInt(taille*taille/10);  // Pour que la map ne soit pas pleine de mobs
+        int nbEpee = random.nextInt(taille*taille/10);  
+
+        for (int i = 0; i < nbPotion; i++) {
+            Objet potion = new PotionSoin();
+            potionalea.add(potion); 
+        }
+
+        for (int i = 0; i < nbEpee; i++) {
+            Objet epee = new Epee();
+            potionalea.add(epee);
+        }
+
+        return potionalea;
+    }
+    
+    
+    
+    public Point2D[] creeMondeAlea() {
+        Random random = new Random();
+        Point2D[] positions = new Point2D[personnages.size()+monstres.size()+objets.size()];
         boolean estUnique;
         // Génération des positions pour chaque entité
         for (int i = 0; i < positions.length; i++) {
@@ -65,26 +166,37 @@ public class World {
                 }
             }
         }
-        hog_rider.setPos(positions[0]);
-        peon.setPos(positions[1]);
-        bugs.setPos(positions[2]);
-        bugs2.setPos(positions[3]);
-        guillaumeT.setPos(positions[4]);
-        wolfie.setPos(positions[5]);
-        grosBill.setPos(positions[6]);
-    }
+        // Atribution des positions
+        for (int i = 0; i < personnages.size(); i++) {
+            personnages.get(i).setPos(positions[i]);
+        }
+        for (int i = 0; i < monstres.size(); i++) {
+            monstres.get(i).setPos(positions[personnages.size() + i]);
+        }
+        for (int i = 0; i < objets.size(); i++) {
+            objets.get(i).setPos(positions[personnages.size() + monstres.size() + i]);
+        }
+            return positions;
+        }
+    
     
     public void tourDeJeu(){
     }
-    public void afficheWorld(){
-        
-    System.out.println("1er archer : " + hog_rider) ;
-    System.out.println("1er Lapin : " + bugs) ; 
-    System.out.println("2eme Lapin = " + bugs2) ;
-    System.out.println("Loup : " + wolfie) ;
-    System.out.println("Guerrier : " + grosBill) ; 
-    System.out.println("2eme archer = " + guillaumeT) ;
-    System.out.println("taille = " + taille) ;
     
+    public void afficheWorld() {
+        System.out.println("Personnages :");
+        for (Personnage p : personnages) {
+            System.out.println(p);
+        }
+
+        System.out.println("Monstres :");
+        for (Monstre m : monstres) {
+            System.out.println(m);
+        }
+
+        System.out.println("Objets :");
+        for (Objet o : objets) {
+            System.out.println(o);
+        }
     }
 }
