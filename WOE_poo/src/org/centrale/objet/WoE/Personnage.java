@@ -49,7 +49,7 @@ public class Personnage extends Creature {
      */
     public Personnage() {
         super();
-        nom = "SalamWEI";
+        nom = "SkibidiPerso";
         distAttMax = 0;
     }
 

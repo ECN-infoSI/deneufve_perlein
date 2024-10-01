@@ -4,8 +4,6 @@
  */
 package org.centrale.objet.WoE;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 /**
@@ -196,9 +194,12 @@ public class Creature {
         }
         
 /**
-     * Déplace la créature aléatoirement dans une zone de taille définie.
+     * Déplace la créature aléatoirement une case horizontalement et/ou verticalement, en évitant les Creatures et limites de World.
      * 
      * @param taille Taille du monde.
+     * @param personnages liste des persos.
+     * @param monstres liste des monstres.
+     * @param objets liste des objets.
      */ 
     
     public void deplace(int taille, LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets) {
@@ -215,7 +216,7 @@ public class Creature {
         }
         // Vérification des collisions avec les autres personnages
         for (Personnage p : personnages) {
-            if (!p.equals(this) && p.getPosition().equals(nouvellePos)) {
+            if (!p.equals(this) && p.getPosition().equals(nouvellePos)) {   //le personnage peut rester statique
                 System.out.println("Deplacement impossible : collision avec un Personnage");
                 return; // Ne pas déplacer si un personnage est déjà à cette position
             }
@@ -240,8 +241,12 @@ public class Creature {
         }
     }
     
+ /**
+     * Retourne la postion de la creature
+     
+     */
     public Point2D getPosition() {
-        return pos; // Retourne la position actuelle du personnage
+        return pos;
     }
 
 }

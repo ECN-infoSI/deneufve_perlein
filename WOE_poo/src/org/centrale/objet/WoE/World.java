@@ -37,38 +37,75 @@ public class World {
         this.objets = creerObjetsAlea();
     }
 
+    /**
+     * @return la liste des personnages du monde
+     */
     public LinkedList<Personnage> getPersonnages() {
         return personnages;
     }
-
+    
+    /**
+     * @return la liste des monstres du monde
+     */
     public LinkedList<Monstre> getMonstres() {
         return monstres;
     }
 
+    /**
+     * @return la liste des objets du monde
+     */
     public LinkedList<Objet> getObjets() {
         return objets;
     }
 
+    /**
+     * @return la taille du monde
+     */
     public int getTaille() {
         return taille;
     }
 
+    /**
+     * Définit la liste de personnages du monde
+     * 
+     * @param personnages la nouvelle liste de personnages
+     */
     public void setPersonnages(LinkedList<Personnage> personnages) {
         this.personnages = personnages;
     }
 
+     /**
+     * Définit la liste de monstres du monde
+     * 
+     * @param monstres la nouvelle liste de personnages
+     */
     public void setMonstres(LinkedList<Monstre> monstres) {
         this.monstres = monstres;
     }
 
+     /**
+     * Définit la liste d'objets du monde
+     * 
+     * @param objets la nouvelle liste d'objets
+     */
     public void setObjets(LinkedList<Objet> objets) {
         this.objets = objets;
     }
 
+     /**
+     * Définit la taille du monde
+     * 
+     * @param taille la nouvelle taille
+     */
     public void setTaille(int taille) {
         this.taille = taille;
     }
       
+     /**
+     * Crée une liste de personnages aléatoire
+     * 
+     * @return la liste de personnages
+     */
     private LinkedList<Personnage> creerPersonnagesAlea() {
         LinkedList<Personnage> persalea = new LinkedList<>();
         Random random = new Random();
@@ -95,6 +132,11 @@ public class World {
         return persalea;
     }
     
+     /**
+     * Crée une liste de monstres aléatoire
+     * 
+     * @return la liste de monstres
+     */
     private LinkedList<Monstre> creerMonstresAlea() {
         LinkedList<Monstre> monstralea = new LinkedList<>();
         Random random = new Random();
@@ -115,6 +157,11 @@ public class World {
         return monstralea;
     }
     
+     /**
+     * Crée une liste d'objets aléatoire
+     * 
+     * @return la liste d'objets
+     */
     private LinkedList<Objet> creerObjetsAlea() {
         LinkedList<Objet> potionalea = new LinkedList<>();
         Random random = new Random();
@@ -185,17 +232,17 @@ public class World {
     public void afficheWorld() {
         System.out.println("Personnages :");
         for (Personnage p : personnages) {
-            System.out.println(p);
+            p.affiche();      
         }
 
         System.out.println("Monstres :");
         for (Monstre m : monstres) {
-            System.out.println(m);
+            m.affiche();
         }
 
         System.out.println("Objets :");
         for (Objet o : objets) {
-            System.out.println(o);
+            o.affiche();
         }
     }
     
@@ -206,7 +253,7 @@ public class World {
         int totalPointsDeVie = 0; 
         for (int i = 0; i < personnages.size(); i++) {
             Personnage personnage = personnages.get(i);
-            System.out.println("Personnage " + (i + 1) + ": " + personnage.getNom());
+            personnage.affiche();
             totalPointsDeVie += personnage.getPtVie(); 
         }
         System.out.println("Total des points de vie de tous les personnages: " + totalPointsDeVie);
