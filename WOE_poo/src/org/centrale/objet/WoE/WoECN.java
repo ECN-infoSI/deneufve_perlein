@@ -5,7 +5,7 @@
 package org.centrale.objet.WoE;
 /**
  *
- * @author benja
+ * MAIN
  */
 public class WoECN {
     public static void main(String[] args) {
