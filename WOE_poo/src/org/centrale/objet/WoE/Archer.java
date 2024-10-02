@@ -60,7 +60,7 @@ public class Archer extends Personnage {
      */
     public Archer() {
         super();
-        this.nbFleches = 0;
+        this.nbFleches = 5;
     }  
     
     /**
