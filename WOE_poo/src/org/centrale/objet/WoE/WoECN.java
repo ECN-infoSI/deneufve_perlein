@@ -3,6 +3,9 @@
  */
 
 package org.centrale.objet.WoE;
+
+import javax.swing.SwingUtilities;
+
 /**
  *
  * MAIN
@@ -12,6 +15,13 @@ public class WoECN {
         World w = new World();
         w.creeMondeAlea();
         w.etatPersonnages(w.getPersonnages());
+        
+        // Interface graphique
+        SwingUtilities.invokeLater(() -> {
+            WorldGUI gui = new WorldGUI();
+            gui.setVisible(true);
+        });
+        
         // Test: Déplacement des objets
         // Affichage des positions initiales de toutes les créatures
         System.out.println("position des Mobs:");
