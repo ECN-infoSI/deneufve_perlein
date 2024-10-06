@@ -259,4 +259,7 @@ public class World {
         System.out.println("Total des points de vie de tous les personnages: " + totalPointsDeVie);
     }
     
+    public void creationJoueur(){
+        
+    }
 }

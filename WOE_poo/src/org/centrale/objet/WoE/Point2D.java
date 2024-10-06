@@ -123,7 +123,7 @@ public class Point2D {
      * @param p2 le point à comparer
      * @return true si les points sont égaux, false sinon
      */
-    public boolean equal(Point2D p2) {
+    public boolean equals(Point2D p2) {
         return p2 != null && x == p2.x && y == p2.y; 
     }
 }

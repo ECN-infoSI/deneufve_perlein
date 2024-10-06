@@ -49,7 +49,8 @@ public class Objet {
     public Objet() {
         nom = "Sable" ;
         style = "Pas bien" ; 
-        poids = 0 ;        
+        poids = 1 ; 
+        pos = new Point2D();
     }
 
     /**
@@ -118,6 +119,7 @@ public class Objet {
         System.out.println("nom : " + nom) ;
         System.out.println("Style de l'objet : " + style) ; 
         System.out.println("Poids = " + poids) ; 
+        pos.affiche();
     }
     
 }

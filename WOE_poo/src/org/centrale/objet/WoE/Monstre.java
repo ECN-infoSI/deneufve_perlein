@@ -8,7 +8,7 @@ package org.centrale.objet.WoE;
  * Classe représentant un monstre dans le jeu.
  * Hérite de la classe Creature.
  */
-public class Monstre extends Creature {
+public abstract class Monstre extends Creature {
     
     /**
      * Constructeur avec paramètres.
@@ -37,7 +37,7 @@ public class Monstre extends Creature {
      * Constructeur par défaut.
      */
     public Monstre() {
-        super();       
+        super();  
     }
 
     /**

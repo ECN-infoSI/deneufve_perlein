@@ -4,12 +4,18 @@
  */
 package org.centrale.objet.WoE;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Random;
+
 /**
  * Représente un personnage dans le jeu, héritant des caractéristiques d'une créature.
  *
  * @author benja
  */
-public class Personnage extends Creature {
+public abstract class Personnage extends Creature {
     private String nom;
     private int distAttMax;
   
@@ -49,8 +55,16 @@ public class Personnage extends Creature {
      */
     public Personnage() {
         super();
-        nom = "SkibidiPerso";
-        distAttMax = 0;
+        try {
+            // Charger noms depuis les fichiers texte
+            List<String> noms = loadNamesFromFile("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/noms.txt");
+            // Générer et afficher un nom
+            Random random = new Random();
+            nom = noms.get(random.nextInt(noms.size()));
+        } catch (IOException e) {
+            nom = "skibidi";
+        }
+        distAttMax = 1;
     }
 
     /**
@@ -101,5 +115,15 @@ public class Personnage extends Creature {
         System.out.println("Portée de parade = " + super.getPagePar());
         System.out.println("Distance d'attaque maximale = " + distAttMax);
         super.getPos().affiche();
+    }
+    
+    /**
+     * Permet la lecture d'un fichier
+     * @param filePath
+     * @return 
+     * @throws java.io.IOException
+     */
+    public static List<String> loadNamesFromFile(String filePath) throws IOException {
+        return Files.readAllLines(Paths.get(filePath));
     }
 }

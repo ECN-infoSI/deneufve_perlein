@@ -45,7 +45,7 @@ public class PotionSoin extends Objet {
      */
     public PotionSoin() {
         super() ; 
-        this.soin = 0 ;  
+        this.soin = 10 ;  
     }
 
     /**
@@ -71,5 +71,10 @@ public class PotionSoin extends Objet {
      */
     public void disparait(){
         super.setPos(null); 
+    }
+    
+    public void affiche() {
+        super.affiche() ; 
+        System.out.println("Soin = " + soin) ; 
     }
 }

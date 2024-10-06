@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * Classe représentant une créature dans le jeu.
  */
-public class Creature {
+public abstract class Creature implements Deplacable{
     /**
      * Points de vie de la créature.
      */
@@ -77,11 +77,11 @@ public class Creature {
      * Constructeur par défaut.
      */
     public Creature() {
-        ptVie = 0;
-        degAtt = 0;
-        ptPar= 0;
-        pageAtt = 0;
-        pagePar= 0;
+        ptVie = 100;
+        degAtt = 5;
+        ptPar= 5;
+        pageAtt = 20;
+        pagePar= 20;
         pos = new Point2D(0,0);        
     }
 
@@ -202,10 +202,11 @@ public class Creature {
      * @param objets liste des objets.
      */ 
     
+    @Override
     public void deplace(int taille, LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets) {
         Random gen = new Random() ; 
-        int dx = gen.nextInt(2) - 1 ; 
-        int dy = gen.nextInt(2) - 1 ;
+        int dx = gen.nextInt(3) - 1 ; 
+        int dy = gen.nextInt(3) - 1 ;
         Point2D nouvellePos = new Point2D(pos.getx() + dx, pos.gety() + dy);
 
         // Vérification des limites de la carte
@@ -230,14 +231,17 @@ public class Creature {
         // Si toutes les vérifications passent, on déplace le personnage
         pos = nouvellePos; // Mise à jour de la position
         
+        LinkedList<Objet> potionsDel = new LinkedList<>();
         for (Objet o : objets) {
             if (nouvellePos.equals(o.getPos()) && (o instanceof PotionSoin)) {
                 PotionSoin p = (PotionSoin) o; 
                 ptVie += p.getSoin(); 
-                p.disparait(); // Faire disparaître la potion
-                objets.remove(o); // Retirer la potion de la liste
+                potionsDel.add(o);
                 System.out.println("Potion de soin utilisee, points de vie : " + p.getSoin());
             }
+        }
+        for (Objet pDel : potionsDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
+            objets.remove(pDel);
         }
     }
     

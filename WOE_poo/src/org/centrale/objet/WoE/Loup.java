@@ -40,6 +40,11 @@ public class Loup extends Monstre {
      */
     public Loup() {
         super() ; 
+        setPtVie(getPtVie()+20);
+        setPagePar(getPagePar()+20);
+        setPageAtt(getPageAtt()+20);
+        setPtPar(getPtPar()+20);
+        setDegAtt(getDegAtt()+20);
     }   
     
     /**

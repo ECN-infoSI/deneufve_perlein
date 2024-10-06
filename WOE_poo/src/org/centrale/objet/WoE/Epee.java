@@ -46,7 +46,7 @@ public class Epee extends Objet {
      */
     public Epee() {
         super() ; 
-        this.degats = 0 ;  
+        this.degats = 10 ;  
     }
 
     /**
@@ -65,5 +65,10 @@ public class Epee extends Objet {
      */
     public void setDegats(int degats) {
         this.degats = degats;
+    }
+    
+    public void affiche() {
+        super.affiche() ; 
+        System.out.println("Dégats = " + degats) ; 
     }
 }

@@ -5,12 +5,13 @@
 package org.centrale.objet.WoE;
 
 import java.util.Random;
+import org.centrale.objet.WoE.Epee;
 
 /**
  * Classe représentant un archer dans le jeu.
  * Hérite de la classe Personnage.
  */
-public class Archer extends Personnage {
+public class Archer extends Personnage implements Combattant{
     /**
      * Nombre de flèches de l'archer.
      */
@@ -60,6 +61,14 @@ public class Archer extends Personnage {
      */
     public Archer() {
         super();
+        
+        Random random = new Random();
+        setPtVie(getPtVie()+20+random.nextInt(10));
+        setPagePar(getPagePar()+20+random.nextInt(10));
+        setPageAtt(getPageAtt()+20+random.nextInt(10));
+        setPtPar(getPtPar()+20+random.nextInt(10));
+        setDegAtt(getDegAtt()+10+random.nextInt(10));   
+        setDistAttMax(3);   
         this.nbFleches = 5;
     }  
     
@@ -86,31 +95,32 @@ public class Archer extends Personnage {
      * 
      * @param c La créature à combattre.
      */
+    @Override
     public void combattre(Creature c) {
-    Random rand = new Random();
-    double dist = super.getPos().distance(c.getPos());
-    if(dist<super.getDistAttMax()){
-        if(dist==1){
-            int tirageAtt = rand.nextInt(100);
-            if(tirageAtt<=super.getPageAtt()){
-                int tirageDef = rand.nextInt(100);    
-                if(tirageDef<=c.getPagePar()){
-                    c.setPtVie(c.getPtVie()-super.getDegAtt());
+        Random rand = new Random();
+        double dist = super.getPos().distance(c.getPos());
+        if(dist<super.getDistAttMax()){
+            if(dist==1){
+                int tirageAtt = rand.nextInt(100);
+                if(tirageAtt<=super.getPageAtt()){
+                    int tirageDef = rand.nextInt(100);    
+                    if(tirageDef<=c.getPagePar()){
+                        c.setPtVie(c.getPtVie()-super.getDegAtt());
+                    }
+                }
+            }
+            else{
+                if(nbFleches>0){
+                    nbFleches--;
+                    int tirageAtt = rand.nextInt(100);
+                    if(tirageAtt<=super.getPageAtt()){
+                        c.setPtVie(c.getPtVie()-super.getDegAtt()); //à distance, le def subit directement les dégats 
+                    }
                 }
             }
         }
         else{
-            if(nbFleches>0){
-                nbFleches--;
-                int tirageAtt = rand.nextInt(100);
-                if(tirageAtt<=super.getPageAtt()){
-                    c.setPtVie(c.getPtVie()-super.getDegAtt()); //à distance, le def subit directement les dégats 
-                }
-            }
+            System.out.println("La créature à combattre est trop loin !");
         }
     }
-    else{
-        System.out.println("La créature à combattre est trop loin !");
-    }
-}
 }

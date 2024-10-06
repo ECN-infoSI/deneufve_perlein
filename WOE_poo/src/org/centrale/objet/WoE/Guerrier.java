@@ -60,6 +60,15 @@ public class Guerrier extends Personnage {
      * Constructeur par défaut.
      */
     public Guerrier() {
+        super();
+      
+        Random random = new Random();
+        setPtVie(getPtVie()+20+random.nextInt(10));
+        setPagePar(getPagePar()+20+random.nextInt(10));
+        setPageAtt(getPageAtt()+20+random.nextInt(10));
+        setPtPar(getPtPar()+20+random.nextInt(10));
+        setDegAtt(getDegAtt()+20+random.nextInt(10));   //plus de dégats que Archer
+        this.e = new Epee();
     }    
 
     /**

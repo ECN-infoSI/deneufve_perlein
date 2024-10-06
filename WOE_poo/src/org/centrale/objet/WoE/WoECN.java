@@ -5,6 +5,8 @@
 package org.centrale.objet.WoE;
 
 import javax.swing.SwingUtilities;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
@@ -17,28 +19,24 @@ public class WoECN {
         w.etatPersonnages(w.getPersonnages());
         
         // Interface graphique
-        SwingUtilities.invokeLater(() -> {
-            WorldGUI gui = new WorldGUI();
-            gui.setVisible(true);
-        });
+        WorldGUI gui = new WorldGUI(w);
+        gui.setVisible(true);
         
-        // Test: Déplacement des objets
-        // Affichage des positions initiales de toutes les créatures
-        System.out.println("position des Mobs:");
-        for (Personnage perso : w.getPersonnages()) {
-            System.out.println(perso.getNom() + ":");
-            perso.getPos().affiche();
-        }
-        // Déplacement de toutes les créatures
-        for (Personnage perso : w.getPersonnages()) {
-            perso.deplace(w.getTaille(), w.getPersonnages(), w.getMonstres(), w.getObjets()) ;
-        }
-        // Affichage des positions après déplacement
-        System.out.println("position des Mobs apres deplacement:");
-        for (Personnage perso : w.getPersonnages()) {
-            System.out.println(perso.getNom() + ":");
-            perso.getPos().affiche();
-        }
-        
+        // Initialiser le Timer pour déplacer les personnages
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                for (Personnage perso : w.getPersonnages()) {
+        // Déplacer chaque personnage d'une unité dans une direction aléatoire
+                    perso.deplace(w.getTaille(), w.getPersonnages(), w.getMonstres(), w.getObjets());
+                }
+                for (Monstre monstre : w.getMonstres()) {
+        // Déplacer chaque personnage d'une unité dans une direction aléatoire
+                    monstre.deplace(w.getTaille(), w.getPersonnages(), w.getMonstres(), w.getObjets());
+                }
+            SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
+            }
+        }, 0, 1000); // Appel toutes les secondes
     }
 }
