@@ -284,6 +284,21 @@ public class World {
                     }
                 }
                 getPersoJoueur().setPos(pos);
+                
+                LinkedList<Objet> potionsDel = new LinkedList<>();
+                for (Objet o : objets) {
+                    if (pos.equals(o.getPos()) && (o instanceof PotionSoin)) {
+                        PotionSoin p = (PotionSoin) o; 
+                        getPersoJoueur().setPtVie(getPersoJoueur().getPtVie()+p.getSoin()); 
+                        potionsDel.add(o);
+                        System.out.println("Potion de soin utilisee, points de vie : " + p.getSoin());
+                    }
+                }
+                
+                for (Objet pDel : potionsDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
+                    objets.remove(pDel); // Supprimer l'objet pDel
+                    setObjets(objets); 
+                }
                 break;
             }
                 
