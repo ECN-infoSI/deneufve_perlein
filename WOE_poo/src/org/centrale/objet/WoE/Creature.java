@@ -225,6 +225,10 @@ public abstract class Creature implements Deplacable{
                 return; // Ne pas déplacer si un monstre est déjà à cette position
             }
         }
+        
+        if (w.getPersoJoueur().equals(nouvellePos)) {
+                return; // Ne pas déplacer si le joueur est déjà à cette position
+            }
         // Si toutes les vérifications passent, on déplace le personnage
         pos = nouvellePos; // Mise à jour de la position
         

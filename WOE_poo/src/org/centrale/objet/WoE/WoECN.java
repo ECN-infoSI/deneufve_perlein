@@ -21,22 +21,22 @@ public class WoECN {
         WorldGUI gui = new WorldGUI(w);
         gui.setVisible(true);
         
+        int nbTour = 1;
         while(true){
-            int nbTour = 0;
             w.tourDeJeu(nbTour);
             SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
+            w.getPersoJoueur().affiche();
             for (Personnage perso : w.getPersonnages()) {
                     // Déplacer chaque personnage d'une unité dans une direction aléatoire
-                    perso.deplace(w.getTaille(), w.getPersonnages(), w.getMonstres(), w.getObjets());
+                    perso.deplace(w);
             }
             
             for (Monstre monstre : w.getMonstres()) {
             // Déplacer chaque personnage d'une unité dans une direction aléatoire
-                    monstre.deplace(w.getTaille(), w.getPersonnages(), w.getMonstres(), w.getObjets());
+                    monstre.deplace(w);
             }
-            
-            SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
             nbTour++;
+            SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
         }
     }
 }

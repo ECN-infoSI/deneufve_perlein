@@ -37,7 +37,7 @@ public class WorldGUI extends JFrame {
 
         // Création du panneau d'information
         infoPanel = new JTextArea();
-        infoPanel.setEditable(false);
+        infoPanel.setEditable(true);
         infoPanel.setLineWrap(true); // Pour éviter le débordement du texte
 
         // Ajouter les éléments à la fenêtre
@@ -71,12 +71,20 @@ public class WorldGUI extends JFrame {
 
                 // Vérifier si un personnage, un monstre ou un objet est à cette position
                 boolean entityAdded = false;
-                for (Personnage p : personnages) {
-                    if (p.getPos().equals(point)) {
-                        button.setBackground(Color.BLUE); // Représente un personnage
-                        button.addActionListener(e -> afficherInfo(p));
-                        entityAdded = true;
-                        break;
+                
+                if (world.getPersoJoueur().getPos().equals(point)){
+                        button.setBackground(Color.GREEN); // Représente le joueur
+                        button.addActionListener(e -> afficherInfo(world.getPersoJoueur()));
+                }
+                
+                if (!entityAdded) {
+                    for (Personnage p : personnages) {
+                        if (p.getPos().equals(point)) {
+                            button.setBackground(Color.BLUE); // Représente un personnage
+                            button.addActionListener(e -> afficherInfo(p));
+                            entityAdded = true;
+
+                        }
                     }
                 }
                 if (!entityAdded) {
@@ -85,24 +93,17 @@ public class WorldGUI extends JFrame {
                             button.setBackground(Color.RED); // Représente un monstre
                             button.addActionListener(e -> afficherInfo(m));
                             entityAdded = true;
-                            break;
+                            
                         }
                     }
                 }
                 if (!entityAdded) {
                     for (Objet o : objets) {
                         if (o.getPos().equals(point)) {
-                            button.setBackground(Color.GREEN); // Représente un objet
+                            button.setBackground(Color.YELLOW); // Représente un objet
                             button.addActionListener(e -> afficherInfo(o));
-                            break;
+                            entityAdded = true;
                         }
-                    }
-                }
-                if (!entityAdded) {
-                    if (world.getPersoJoueur().equals(point)){
-                        button.setBackground(Color.YELLOW); // Représente le joueur
-                        button.addActionListener(e -> afficherInfo(world.getPersoJoueur()));
-                        break;
                     }
                 }
                 worldPanel.add(button);

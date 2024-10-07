@@ -35,9 +35,7 @@ public class Joueur {
                 break;
         }
         
-        persoChoisi.setPos(new Point2D());
-        
-        
+        persoChoisi.setPos(new Point2D(0,0));   //Position de départ   
     }
 
     public void setPersoChoisi(Personnage persoChoisi) {

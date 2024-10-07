@@ -10,5 +10,5 @@ import java.util.LinkedList;
  * @author benja
  */
 public interface Deplacable {
-    void deplace(int taille, LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets);
+    void deplace(World w);
 }
