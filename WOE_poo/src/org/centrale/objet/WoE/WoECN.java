@@ -5,8 +5,6 @@
 package org.centrale.objet.WoE;
 
 import javax.swing.SwingUtilities;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  *
@@ -29,11 +27,13 @@ public class WoECN {
             for (Personnage perso : w.getPersonnages()) {
                     // Déplacer chaque personnage d'une unité dans une direction aléatoire
                     perso.deplace(w);
+                    
             }
             
             for (Monstre monstre : w.getMonstres()) {
             // Déplacer chaque personnage d'une unité dans une direction aléatoire
                     monstre.deplace(w);
+                    
             }
             nbTour++;
             SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique

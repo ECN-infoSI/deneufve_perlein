@@ -214,7 +214,7 @@ public class World {
         positions[0] = posJoueur;
         boolean estUnique;
         // Génération des positions pour chaque entité
-        for (int i = 0; i < positions.length; i++) {
+        for (int i = 1; i < positions.length; i++) {
             estUnique = false;
             // Continue jusqu'à obtenir une position unique
             while (!estUnique) {
@@ -255,7 +255,7 @@ public class World {
         Scanner scanner = new Scanner(System.in);
         int choix = scanner.nextInt();
         switch(choix){
-            case 1 -> {
+            case 1 :
                 boolean Deplace = false;
                 Point2D pos = null;  // Déclarer pos en dehors de la boucle pour éviter l'erreur
                 while (! Deplace){
@@ -296,13 +296,13 @@ public class World {
                 }
                 
                 for (Objet pDel : potionsDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
-                    objets.remove(pDel); // Supprimer l'objet pDel
+                    objets.remove(pDel);            // Supprimer l'objet pDel
                     setObjets(objets); 
                 }
                 break;
-            }
+            
                 
-            case 2 -> {
+            case 2 : 
                 LinkedList<Creature> creaturesAPortee = new LinkedList<>();
                 for (Personnage p : personnages) {
                     if (p.getPosition().distance(getPersoJoueur().getPos())<=getPersoJoueur().getDistAttMax()) {
@@ -313,24 +313,43 @@ public class World {
                     if (m.getPosition().distance(getPersoJoueur().getPos())<=getPersoJoueur().getDistAttMax()) {
                         creaturesAPortee.add(m);
                     }
+                }
+                if (creaturesAPortee.isEmpty()){
+                    System.out.println("Aucune créature n'est à portée");
+                }
+                else{
                     System.out.println("Choisissez la créature que vous voulez combattre:");
                     int i = 0;
-                    if (creaturesAPortee.isEmpty()){
-                        System.out.println("Aucune créature n'est à portée");
-                    }
-                    else{
-                        for (Creature c : creaturesAPortee){                    //spécifier si la liste est vide
+                    for (Creature c : creaturesAPortee){                    //spécifier si la liste est vide
                         System.out.println(i);
                         c.affiche();
                         i++;
-                        }
-                        int choixCombat = scanner.nextInt();
-                        getPersoJoueur().combattre(creaturesAPortee.get(choixCombat));
                     }
-                    break;
+                    int choixCombat = scanner.nextInt();
+                    getPersoJoueur().combattre(creaturesAPortee.get(choixCombat));
                 }
-            }
+                break;            
         }
+        //disparition des persos morts
+        LinkedList<Personnage> personnagesMorts = new LinkedList<>();
+                for (Personnage p : personnages) {
+                    if (p.getPtVie()<=0) {
+                        personnagesMorts.add(p);
+                    }
+                }
+                
+        LinkedList<Monstre> monstresMorts = new LinkedList<>();
+                for (Monstre m : monstres) {
+                    if (m.getPtVie()<=0) {
+                        monstresMorts.add(m);
+                    }
+                }
+                for (Personnage pDel : personnagesMorts){      //on retire les personnages morts du monde ici pour éviter les conflits d'accès
+                    personnages.remove(pDel); // Supprimer l'objet pDel
+                }
+                for (Monstre mDel : monstresMorts){      //on retire les personnages morts du monde ici pour éviter les conflits d'accès
+                    monstres.remove(mDel); // Supprimer l'objet pDel
+                }        
     }
     
     /**

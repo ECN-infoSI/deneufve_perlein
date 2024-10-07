@@ -9,6 +9,6 @@ package org.centrale.objet.WoE;
  * @author benja
  */
 public interface Combattant {
-    void combattre(Creature c);  // Méthode abstraite pour l'attaque
+    
+    public void combattre(Creature c);
 }
-

@@ -106,6 +106,7 @@ public class Guerrier extends Personnage {
                 int tirageDef = rand.nextInt(100);    
                 if(tirageDef<=c.getPagePar()){
                     c.setPtVie(c.getPtVie()-super.getDegAtt());
+                    System.out.println("Touché !");
                 }
             }
     }        

@@ -65,10 +65,10 @@ public class Archer extends Personnage implements Combattant{
         Random random = new Random();
         setPtVie(getPtVie()+20+random.nextInt(10));
         setPagePar(getPagePar()+20+random.nextInt(10));
-        setPageAtt(getPageAtt()+20+random.nextInt(10));
+        setPageAtt(getPageAtt()+50+random.nextInt(10));
         setPtPar(getPtPar()+20+random.nextInt(10));
-        setDegAtt(getDegAtt()+10+random.nextInt(10));   
-        setDistAttMax(3);   
+        setDegAtt(getDegAtt()+1000+random.nextInt(10));   
+        setDistAttMax(300);   
         this.nbFleches = 5;
     }  
     
@@ -99,13 +99,14 @@ public class Archer extends Personnage implements Combattant{
     public void combattre(Creature c) {
         Random rand = new Random();
         double dist = super.getPos().distance(c.getPos());
-        if(dist<super.getDistAttMax()){
+        if(dist<=super.getDistAttMax()){
             if(dist==1){
                 int tirageAtt = rand.nextInt(100);
                 if(tirageAtt<=super.getPageAtt()){
                     int tirageDef = rand.nextInt(100);    
                     if(tirageDef<=c.getPagePar()){
                         c.setPtVie(c.getPtVie()-super.getDegAtt());
+                        System.out.println("Touché !");
                     }
                 }
             }
@@ -115,6 +116,7 @@ public class Archer extends Personnage implements Combattant{
                     int tirageAtt = rand.nextInt(100);
                     if(tirageAtt<=super.getPageAtt()){
                         c.setPtVie(c.getPtVie()-super.getDegAtt()); //à distance, le def subit directement les dégats 
+                        System.out.println("Touché !");
                     }
                 }
             }

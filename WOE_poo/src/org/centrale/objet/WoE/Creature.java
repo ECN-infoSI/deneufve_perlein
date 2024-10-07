@@ -226,7 +226,7 @@ public abstract class Creature implements Deplacable{
             }
         }
         
-        if (w.getPersoJoueur().equals(nouvellePos)) {
+        if (w.getPersoJoueur().getPos().equals(nouvellePos)) {
                 return; // Ne pas déplacer si le joueur est déjà à cette position
             }
         // Si toutes les vérifications passent, on déplace le personnage
@@ -247,6 +247,8 @@ public abstract class Creature implements Deplacable{
             w.setObjets(objets); 
         }
     }
+    
+    
     
  /**
      * @return la position de la creature

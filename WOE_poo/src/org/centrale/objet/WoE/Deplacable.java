@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
 package org.centrale.objet.WoE;
-import java.util.LinkedList;
 
 /**
  *
