@@ -196,34 +196,31 @@ public abstract class Creature implements Deplacable{
 /**
      * Déplace la créature aléatoirement une case horizontalement et/ou verticalement, en évitant les Creatures et limites de World.
      * 
-     * @param taille Taille du monde.
-     * @param personnages liste des persos.
-     * @param monstres liste des monstres.
-     * @param objets liste des objets.
+     * @param w
      */ 
     
     @Override
-    public void deplace(int taille, LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets) {
+    public void deplace(World w) {
         Random gen = new Random() ; 
         int dx = gen.nextInt(3) - 1 ; 
         int dy = gen.nextInt(3) - 1 ;
         Point2D nouvellePos = new Point2D(pos.getx() + dx, pos.gety() + dy);
 
         // Vérification des limites de la carte
-        if (nouvellePos.getx() < 0 || nouvellePos.getx() >= taille ||
-            nouvellePos.gety() < 0 || nouvellePos.gety() >= taille) {
+        if (nouvellePos.getx() < 0 || nouvellePos.getx() >= w.getTaille() ||
+            nouvellePos.gety() < 0 || nouvellePos.gety() >= w.getTaille()) {
             System.out.println("Deplacement impossible : hors des limites de la Map.");
             return; // Ne pas déplacer si en dehors des limites
         }
-        // Vérification des collisions avec les autres personnages
-        for (Personnage p : personnages) {
+        // Vérification des collisions avec les autres w.getPersonnages()
+        for (Personnage p : w.getPersonnages()) {
             if (!p.equals(this) && p.getPosition().equals(nouvellePos)) {   //le personnage peut rester statique
                 System.out.println("Deplacement impossible : collision avec un Personnage");
                 return; // Ne pas déplacer si un personnage est déjà à cette position
             }
         }
         // Vérification des collisions avec les monstres
-        for (Monstre m : monstres) {
+        for (Monstre m : w.getMonstres()) {
             if (m.getPosition().equals(nouvellePos)) {
                 return; // Ne pas déplacer si un monstre est déjà à cette position
             }
@@ -232,7 +229,7 @@ public abstract class Creature implements Deplacable{
         pos = nouvellePos; // Mise à jour de la position
         
         LinkedList<Objet> potionsDel = new LinkedList<>();
-        for (Objet o : objets) {
+        for (Objet o : w.getObjets()) {
             if (nouvellePos.equals(o.getPos()) && (o instanceof PotionSoin)) {
                 PotionSoin p = (PotionSoin) o; 
                 ptVie += p.getSoin(); 
@@ -241,7 +238,9 @@ public abstract class Creature implements Deplacable{
             }
         }
         for (Objet pDel : potionsDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
-            objets.remove(pDel);
+            LinkedList<Objet> objets = w.getObjets();
+            objets.remove(pDel); // Supprimer l'objet pDel
+            w.setObjets(objets); 
         }
     }
     
