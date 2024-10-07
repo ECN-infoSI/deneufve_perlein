@@ -98,6 +98,13 @@ public class WorldGUI extends JFrame {
                         }
                     }
                 }
+                if (!entityAdded) {
+                    if (world.getPersoJoueur().equals(point)){
+                        button.setBackground(Color.YELLOW); // Représente le joueur
+                        button.addActionListener(e -> afficherInfo(world.getPersoJoueur()));
+                        break;
+                    }
+                }
                 worldPanel.add(button);
             }
         }

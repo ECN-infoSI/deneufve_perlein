@@ -21,11 +21,12 @@ public class World {
     private int taille ;
 
 
-    public World(LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets, int taille) {
+    public World(LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets, int taille, Personnage persoChoisi) {
         this.personnages = personnages;  
         this.monstres = monstres;        
         this.objets = objets;            
-        this.taille = taille;            
+        this.taille = taille;   
+        this.persoJoueur = persoChoisi;
     }
 
     /**
@@ -37,6 +38,7 @@ public class World {
         this.personnages = creerPersonnagesAlea();
         this.monstres = creerMonstresAlea();
         this.objets = creerObjetsAlea();
+        this.persoJoueur = new Joueur().getPersoChoisi();
     }
 
     /**
@@ -292,7 +294,7 @@ public class World {
                         }
                 System.out.println("Choisissez la créature que vous voulez combattre:");
                 int i = 0;
-                for (Creature c : creaturesAPortee){
+                for (Creature c : creaturesAPortee){                    //spécifier si la liste est vide
                     System.out.println(i);
                     c.affiche();
                     i++;

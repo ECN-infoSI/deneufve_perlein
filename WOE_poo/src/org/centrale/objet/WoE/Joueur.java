@@ -34,5 +34,17 @@ public class Joueur {
                 persoChoisi = new Archer();
                 break;
         }
+        
+        persoChoisi.setPos(new Point2D());
+        
+        
+    }
+
+    public void setPersoChoisi(Personnage persoChoisi) {
+        this.persoChoisi = persoChoisi;
+    }
+
+    public Personnage getPersoChoisi() {
+        return persoChoisi;
     }
 }
