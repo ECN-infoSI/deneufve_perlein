@@ -43,4 +43,9 @@ public class Paysan extends Personnage{
     public Paysan() {
         super();
     }
+    
+    @Override
+    public void combattre(Creature c) {
+        System.out.println("Le paysan ne peut pas combattre !");
+    }
 }

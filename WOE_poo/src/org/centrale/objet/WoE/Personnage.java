@@ -106,6 +106,7 @@ public abstract class Personnage extends Creature {
     /**
      * Affiche les informations du personnage.
      */
+    @Override
     public void affiche() {
         System.out.println("nom: " + nom);
         System.out.println("Point de vie = " + super.getPtVie());
@@ -126,4 +127,6 @@ public abstract class Personnage extends Creature {
     public static List<String> loadNamesFromFile(String filePath) throws IOException {
         return Files.readAllLines(Paths.get(filePath));
     }
+    
+    public abstract void combattre(Creature c);
 }

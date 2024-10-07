@@ -95,6 +95,8 @@ public class Guerrier extends Personnage {
      * 
      * @param c La créature à combattre.
      */
+    
+    @Override
     public void combattre(Creature c) {
     Random rand = new Random();
     double dist = super.getPos().distance(c.getPos());

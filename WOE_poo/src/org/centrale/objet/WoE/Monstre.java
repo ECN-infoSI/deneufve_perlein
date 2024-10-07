@@ -44,6 +44,7 @@ public abstract class Monstre extends Creature {
      * Affiche les informations du monstre, incluant ses points de vie, dégâts d'attaque,
      * points de parade, pourcentage d'attaque et de parade, ainsi que sa position.
      */
+    @Override
     public void affiche() {
         System.out.println("Point de vie = " + super.getPtVie());
         System.out.println("Degat d'attaque = " + super.getDegAtt());

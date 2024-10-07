@@ -5,6 +5,7 @@
 package org.centrale.objet.WoE;
 import java.util.LinkedList;
 import java.util.Random ;
+import java.util.Scanner;
 /**
  * Représente le monde du jeu, contenant différentes entités comme des personnages
  * et des créatures.
@@ -14,6 +15,7 @@ import java.util.Random ;
 public class World {
     
     private LinkedList<Personnage> personnages;
+    private Personnage persoJoueur;
     private LinkedList<Monstre> monstres;
     private LinkedList<Objet> objets;
     private int taille ;
@@ -59,6 +61,13 @@ public class World {
     }
 
     /**
+     * @return le personnage controlé par le joueur
+     */
+    public Personnage getPersoJoueur() {
+        return persoJoueur;
+    }
+
+    /**
      * @return la taille du monde
      */
     public int getTaille() {
@@ -72,6 +81,15 @@ public class World {
      */
     public void setPersonnages(LinkedList<Personnage> personnages) {
         this.personnages = personnages;
+    }
+
+    /**
+     * Définit le personnage contrôlé par le joueur
+     * 
+     * @param persoJoueur 
+     */
+    public void setPersoJoueur(Personnage persoJoueur) {
+        this.persoJoueur = persoJoueur;
     }
 
      /**
@@ -223,7 +241,67 @@ public class World {
         }
     
     
-    public void tourDeJeu(){
+    public void tourDeJeu(int NbTour){
+        NbTour+=1;
+        System.out.println("Tour"+NbTour);
+        System.out.println("Choisissez votre action: 1.Se déplacer - 2.Combattre");
+        Scanner scanner = new Scanner(System.in);
+        int choix = scanner.nextInt();
+        switch(choix){
+            case 1:
+                boolean Deplace = false;
+                Point2D pos = null;  // Déclarez pos en dehors de la boucle
+                while (! Deplace){
+                    Deplace  = true;
+                    System.out.println("Entrez la position que vous voulez occuper");
+                    int x = scanner.nextInt();
+                    int y = scanner.nextInt();
+                    pos = new Point2D(x,y);
+                    // Vérification des limites de la carte
+                    if (pos.getx() < 0 || pos.getx() >= taille ||
+                        pos.gety() < 0 || pos.gety() >= taille || pos.distance(getPersoJoueur().getPos())>3) { //le joueur peut se déplacer de 3
+                        System.out.println("Deplacement impossible : hors des limites de la Map.");
+                        Deplace = false;
+                    }
+                    for (Personnage p : personnages) {
+                        if (p.getPosition().equals(pos)) {
+                            System.out.println("Deplacement impossible : collision avec un Personnage");
+                            Deplace = false;
+                        }    
+                    }
+                    for (Monstre m : monstres) {
+                        if (m.getPosition().equals(pos)) {
+                            System.out.println("Deplacement impossible : collision avec un Monstre");
+                            Deplace = false;
+                        }
+                    }
+                }
+                getPersoJoueur().setPos(pos);
+                break;
+                
+            case 2:
+                LinkedList<Creature> creaturesAPortee = new LinkedList<>();
+                for (Personnage p : personnages) {
+                        if (p.getPosition().distance(getPersoJoueur().getPos())<=getPersoJoueur().getDistAttMax()) {
+                            creaturesAPortee.add(p);
+                        }
+                }
+                for (Monstre m : monstres) {
+                        if (m.getPosition().distance(getPersoJoueur().getPos())<=getPersoJoueur().getDistAttMax()) {
+                            creaturesAPortee.add(m);
+                        }
+                System.out.println("Choisissez la créature que vous voulez combattre:");
+                int i = 0;
+                for (Creature c : creaturesAPortee){
+                    System.out.println(i);
+                    c.affiche();
+                    i++;
+                }
+                int choixCombat = scanner.nextInt();
+                getPersoJoueur().combattre(creaturesAPortee.get(choixCombat));         
+                break;
+            }
+        }
     }
     
     /**

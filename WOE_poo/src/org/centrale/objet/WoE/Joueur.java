@@ -23,7 +23,7 @@ public class Joueur {
     public Joueur() {
         Scanner scanner = new Scanner(System.in);
         
-        System.out.println("Choisissez la classe de votre personnage parmi: 1 : Guerrier ; 2 : Archer");
+        System.out.println("Choisissez la classe de votre personnage parmi: 1.Guerrier - 2.Archer");
         int choix = scanner.nextInt();
         
         switch(choix){

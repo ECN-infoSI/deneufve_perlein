@@ -246,11 +246,11 @@ public abstract class Creature implements Deplacable{
     }
     
  /**
-     * Retourne la postion de la creature
-     
+     * @return la position de la creature
      */
     public Point2D getPosition() {
         return pos;
     }
 
+    public abstract void affiche(); 
 }
