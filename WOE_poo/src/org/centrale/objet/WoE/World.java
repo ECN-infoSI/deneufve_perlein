@@ -30,15 +30,16 @@ public class World {
     }
 
     /**
-     * Constructeur par défaut, crée un monde avec des entités par défaut
-     * et une taille de 1000.
+     * Constructeur par défaut, crée un monde avec des entités par défaut, crée un personnage controlé par le joueur
+     * avec une taille de 50.
      */
     public World() {
         this.taille = 50;
         this.personnages = creerPersonnagesAlea();
         this.monstres = creerMonstresAlea();
         this.objets = creerObjetsAlea();
-        this.persoJoueur = new Joueur().getPersoChoisi();
+        this.persoJoueur = creationJoueur(new Point2D(0,0));
+        creerMondeAlea();
     }
 
     /**
@@ -120,7 +121,31 @@ public class World {
     public void setTaille(int taille) {
         this.taille = taille;
     }
-      
+    
+    /**
+     * Slide 12: création du personnage du joueur
+     * @param positionInit
+     * @return 
+     */
+    
+    public final Personnage creationJoueur(Point2D positionInit){
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Choisissez la classe de votre personnage parmi: 1.Guerrier - 2.Archer");
+        int choix = scanner.nextInt();
+        
+        switch(choix){
+            case 1:
+                persoJoueur = new Guerrier();
+                break;
+            case 2:
+                persoJoueur = new Archer();
+                break;
+        }
+        persoJoueur.setPos(positionInit);   //Position de départ  
+        return persoJoueur;
+    } 
+    
      /**
      * Crée une liste de personnages aléatoire
      * 
@@ -207,7 +232,7 @@ public class World {
      * Crée des positions aléatoires pour chaque entité dans le monde.
      * Chaque position est unique et dans les limites de la taille du monde.
      */
-    public void creeMondeAlea() {
+    public final void creerMondeAlea() {
         Random random = new Random();
         Point2D[] positions = new Point2D[personnages.size()+monstres.size()+objets.size()+1];  //+1 pour la position du joueur
         Point2D posJoueur = new Point2D(0,0);   //Position du joueur
@@ -254,73 +279,27 @@ public class World {
         System.out.println("Choisissez votre action: 1.Se déplacer - 2.Combattre");
         Scanner scanner = new Scanner(System.in);
         int choix = scanner.nextInt();
+        
         switch(choix){
             case 1 :
                 boolean Deplace = false;
-                Point2D pos = null;  // Déclarer pos en dehors de la boucle pour éviter l'erreur
                 while (! Deplace){
-                    Deplace  = true;
-                    System.out.println("Entrez la position que vous voulez occuper");
-                    int x = scanner.nextInt();
-                    int y = scanner.nextInt();
-                    pos = new Point2D(x,y);
-                    // Vérification des limites de la carte, de la limite de déplacement, des collisions
-                    if (pos.getx() < 0 || pos.getx() >= taille ||
-                            pos.gety() < 0 || pos.gety() >= taille || pos.distance(getPersoJoueur().getPos())>3) { //le joueur peut se déplacer de 3
-                        System.out.println("Deplacement impossible : hors des limites de la Map ou trop loin de la position actuelle.");
-                        Deplace = false;
-                    }
-                    for (Personnage p : personnages) {
-                        if (p.getPosition().equals(pos)) {
-                            System.out.println("Deplacement impossible : collision avec un Personnage");
-                            Deplace = false;
-                        }    
-                    }
-                    for (Monstre m : monstres) {
-                        if (m.getPosition().equals(pos)) {
-                            System.out.println("Deplacement impossible : collision avec un Monstre");
-                            Deplace = false;
-                        }
-                    }
-                }
-                getPersoJoueur().setPos(pos);
-                
-                LinkedList<Objet> potionsDel = new LinkedList<>();
-                for (Objet o : objets) {
-                    if (pos.equals(o.getPos()) && (o instanceof PotionSoin)) {
-                        PotionSoin p = (PotionSoin) o; 
-                        getPersoJoueur().setPtVie(getPersoJoueur().getPtVie()+p.getSoin()); 
-                        potionsDel.add(o);
-                        System.out.println("Potion de soin utilisee, points de vie : " + p.getSoin());
-                    }
-                }
-                
-                for (Objet pDel : potionsDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
-                    objets.remove(pDel);            // Supprimer l'objet pDel
-                    setObjets(objets); 
-                }
+                    System.out.println("Entrez la translation que vous voulez effectuer");      //à améliorer pour meilleure UX et permettre de rester statique (boucle infinie)
+                    int dx = scanner.nextInt();
+                    int dy = scanner.nextInt();
+                    Deplace = getPersoJoueur().deplace(this, dx, dy);
+                    }                                  
                 break;
-            
                 
             case 2 : 
-                LinkedList<Creature> creaturesAPortee = new LinkedList<>();
-                for (Personnage p : personnages) {
-                    if (p.getPosition().distance(getPersoJoueur().getPos())<=getPersoJoueur().getDistAttMax()) {
-                        creaturesAPortee.add(p);
-                    }
-                }
-                for (Monstre m : monstres) {
-                    if (m.getPosition().distance(getPersoJoueur().getPos())<=getPersoJoueur().getDistAttMax()) {
-                        creaturesAPortee.add(m);
-                    }
-                }
+                LinkedList<Creature> creaturesAPortee = getPersoJoueur().creaturesAPortee(this, getPersoJoueur().getDistAttMax());
                 if (creaturesAPortee.isEmpty()){
-                    System.out.println("Aucune créature n'est à portée");
-                }
+                        System.out.println("Aucune créature n'est à portée");
+                    }
                 else{
                     System.out.println("Choisissez la créature que vous voulez combattre:");
                     int i = 0;
-                    for (Creature c : creaturesAPortee){                    //spécifier si la liste est vide
+                    for (Creature c : creaturesAPortee){//affiche les creatures à portee             
                         System.out.println(i);
                         c.affiche();
                         i++;
@@ -330,6 +309,35 @@ public class World {
                 }
                 break;            
         }
+    }
+    
+    /**
+     * Affiche les informations du monde, y compris les entités et la taille.
+     */
+    public void afficheWorld() {
+        System.out.println("Personnage du joueur :");
+        persoJoueur.affiche();
+        
+        System.out.println("Personnages :");
+        for (Personnage p : personnages) {
+            p.affiche();      
+        }
+
+        System.out.println("Monstres :");
+        for (Monstre m : monstres) {
+            m.affiche();
+        }
+
+        System.out.println("Objets :");
+        for (Objet o : objets) {
+            o.affiche();
+        }
+    }
+    
+    /**
+     * Retire du monde les personnages et monstres morts
+     */
+    public void actualisationMorts(){
         //disparition des persos morts
         LinkedList<Personnage> personnagesMorts = new LinkedList<>();
                 for (Personnage p : personnages) {
@@ -350,43 +358,5 @@ public class World {
                 for (Monstre mDel : monstresMorts){      //on retire les personnages morts du monde ici pour éviter les conflits d'accès
                     monstres.remove(mDel); // Supprimer l'objet pDel
                 }        
-    }
-    
-    /**
-     * Affiche les informations du monde, y compris les entités et la taille.
-     */
-    public void afficheWorld() {
-        System.out.println("Personnages :");
-        for (Personnage p : personnages) {
-            p.affiche();      
-        }
-
-        System.out.println("Monstres :");
-        for (Monstre m : monstres) {
-            m.affiche();
-        }
-
-        System.out.println("Objets :");
-        for (Objet o : objets) {
-            o.affiche();
-        }
-    }
-    
-    /**
-     * Slide 12: parcourir la liste de personnage: on affiche leur nom et la somme des points de vie
-     * @param personnages
-     */
-    public void etatPersonnages(LinkedList<Personnage> personnages) {
-        int totalPointsDeVie = 0; 
-        for (int i = 0; i < personnages.size(); i++) {
-            Personnage personnage = personnages.get(i);
-            personnage.affiche();
-            totalPointsDeVie += personnage.getPtVie(); 
-        }
-        System.out.println("Total des points de vie de tous les personnages: " + totalPointsDeVie);
-    }
-    
-    public void creationJoueur(){
-        
     }
 }
