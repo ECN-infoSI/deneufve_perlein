@@ -4,13 +4,14 @@
  */
 package org.centrale.objet.WoE;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 /**
  * Classe représentant un guerrier dans le jeu.
  * Hérite de la classe Personnage.
  */
-public class Guerrier extends Personnage {
+public class Guerrier extends Personnage implements Combattant{
     
     /**
      * Épée utilisée par le guerrier.
@@ -98,20 +99,42 @@ public class Guerrier extends Personnage {
     
     @Override
     public void combattre(Creature c) {
-    Random rand = new Random();
-    double dist = super.getPos().distance(c.getPos());
-    if(dist==1){  //Le guerrier n'ayant pas de projectiles, seule la méthode au corps-à-corps est implémentée
-            int tirageAtt = rand.nextInt(100);
-            if(tirageAtt<=super.getPageAtt()){
-                int tirageDef = rand.nextInt(100);    
-                if(tirageDef<=c.getPagePar()){
-                    c.setPtVie(c.getPtVie()-super.getDegAtt());
-                    System.out.println("Touché !");
+        Random rand = new Random();
+        double dist = super.getPos().distance(c.getPos());
+        if(dist==1){  //Le guerrier n'ayant pas de projectiles, seule la méthode au corps-à-corps est implémentée
+                int tirageAtt = rand.nextInt(100);
+                if(tirageAtt<=super.getPageAtt()){
+                    int tirageDef = rand.nextInt(100);    
+                    if(tirageDef<=c.getPagePar()){
+                        c.setPtVie(c.getPtVie()-super.getDegAtt());
+                    }
                 }
-            }
-    }        
-    else{
-        System.out.println("La créature à combattre est trop loin !");
+        }        
+        else{
+            System.out.println("La créature à combattre est trop loin !");
+        }
     }
-}
+    
+    @Override
+    public LinkedList<Creature> creaturesAPortee(World w, int portee){
+        LinkedList<Creature> creaturesAPortee = new LinkedList<>();
+                    for (Personnage p : w.getPersonnages()) {
+                        if (p.getPos().distance(super.getPos())<=portee) {
+                            creaturesAPortee.add(p);
+                        }
+                    }
+                    for (Monstre m : w.getMonstres()) {
+                        if (m.getPos().distance(super.getPos())<=portee) {
+                            creaturesAPortee.add(m);
+                        }
+                                
+                    }
+                    
+                    if (w.getJoueur().getPersoChoisi().getPos().distance(super.getPos())<=portee) {
+                            creaturesAPortee.add(w.getJoueur().getPersoChoisi());
+                    }
+                    
+                    creaturesAPortee.remove(this);
+                    return creaturesAPortee;
+    }
 }

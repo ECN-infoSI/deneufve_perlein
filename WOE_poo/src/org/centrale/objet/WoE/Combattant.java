@@ -4,6 +4,8 @@
  */
 package org.centrale.objet.WoE;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author benja
@@ -11,4 +13,6 @@ package org.centrale.objet.WoE;
 public interface Combattant {
     
     public void combattre(Creature c);
+    
+    public LinkedList<Creature> creaturesAPortee(World w, int portee);
 }

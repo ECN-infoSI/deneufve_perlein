@@ -4,6 +4,8 @@
  */
 package org.centrale.objet.WoE;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
@@ -11,38 +13,50 @@ import java.util.Scanner;
  * @author benja
  */
 public class Joueur {
-    private Personnage persoChoisi;
+    private Personnage persoJoueur;
+    private ArrayList<Objet> inventaire;
+    public boolean enDeplacement;
 
-    public Joueur(Personnage persoChoisi) {
-        this.persoChoisi = persoChoisi;
-        if (persoChoisi instanceof Paysan) {
+    public Joueur(Personnage persoJoueur) {
+        this.persoJoueur = persoJoueur;
+        if (persoJoueur instanceof Paysan) {
             throw new IllegalArgumentException("Un Paysan ne peut pas être choisi par le joueur");
         }
+        this.inventaire = new ArrayList<Objet>();
+        this.enDeplacement = false;
     }
 
     public Joueur() {
-        Scanner scanner = new Scanner(System.in);
-        
-        System.out.println("Choisissez la classe de votre personnage parmi: 1.Guerrier - 2.Archer");
-        int choix = scanner.nextInt();
-        
-        switch(choix){
-            case 1:
-                persoChoisi = new Guerrier();
-                break;
-            case 2:
-                persoChoisi = new Archer();
-                break;
-        }
-        
-        persoChoisi.setPos(new Point2D(0,0));   //Position de départ   
+        persoJoueur = new Guerrier();
+        this.inventaire = new ArrayList<Objet>();
+        this.enDeplacement = false;
     }
 
-    public void setPersoChoisi(Personnage persoChoisi) {
-        this.persoChoisi = persoChoisi;
+    public ArrayList<Objet> getInventaire() {
+        return inventaire;
+    }
+
+    public void setInventaire(ArrayList<Objet> inventaire) {
+        this.inventaire = inventaire;
+    }
+
+    public void setPersoChoisi(Personnage persoJoueur) {
+        this.persoJoueur = persoJoueur;
     }
 
     public Personnage getPersoChoisi() {
-        return persoChoisi;
+        return persoJoueur;
     }
+
+    public synchronized boolean isEnDeplacement() {
+        return enDeplacement;
+    }
+
+    public synchronized void setEnDeplacement(boolean enDeplacement) {
+        this.enDeplacement = enDeplacement;
+    }
+    
+    
+    
+    
 }

@@ -6,27 +6,33 @@ package org.centrale.objet.WoE;
 import java.util.LinkedList;
 import java.util.Random ;
 import java.util.Scanner;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 /**
  * Représente le monde du jeu, contenant différentes entités comme des personnages
  * et des créatures.
  *
  * @author benja
  */
-public class World {
+public class World{
     
     private LinkedList<Personnage> personnages;
-    private Personnage persoJoueur;
+    private Joueur joueur;
     private LinkedList<Monstre> monstres;
     private LinkedList<Objet> objets;
     private int taille ;
+    private String command;
 
 
-    public World(LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets, int taille, Personnage persoChoisi) {
+    public World(LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets, int taille, Joueur J) {
         this.personnages = personnages;  
         this.monstres = monstres;        
         this.objets = objets;            
         this.taille = taille;   
-        this.persoJoueur = persoChoisi;
+        this.joueur = J;
+        command = "";
     }
 
     /**
@@ -38,8 +44,9 @@ public class World {
         this.personnages = creerPersonnagesAlea();
         this.monstres = creerMonstresAlea();
         this.objets = creerObjetsAlea();
-        this.persoJoueur = creationJoueur(new Point2D(0,0));
+        this.joueur = creationJoueur(new Point2D(0,0));
         creerMondeAlea();
+        command = "";
     }
 
     /**
@@ -66,8 +73,8 @@ public class World {
     /**
      * @return le personnage controlé par le joueur
      */
-    public Personnage getPersoJoueur() {
-        return persoJoueur;
+    public Joueur getJoueur() {
+        return joueur;
     }
 
     /**
@@ -91,8 +98,8 @@ public class World {
      * 
      * @param persoJoueur 
      */
-    public void setPersoJoueur(Personnage persoJoueur) {
-        this.persoJoueur = persoJoueur;
+    public void setPersoJoueur(Joueur J) {
+        this.joueur = J;
     }
 
      /**
@@ -128,22 +135,23 @@ public class World {
      * @return 
      */
     
-    public final Personnage creationJoueur(Point2D positionInit){
+    public final Joueur creationJoueur(Point2D positionInit){
         Scanner scanner = new Scanner(System.in);
         
         System.out.println("Choisissez la classe de votre personnage parmi: 1.Guerrier - 2.Archer");
         int choix = scanner.nextInt();
+        joueur = new Joueur();
         
         switch(choix){
             case 1:
-                persoJoueur = new Guerrier();
+                joueur.setPersoChoisi(new Guerrier()); 
                 break;
             case 2:
-                persoJoueur = new Archer();
+                joueur.setPersoChoisi(new Archer()); 
                 break;
         }
-        persoJoueur.setPos(positionInit);   //Position de départ  
-        return persoJoueur;
+        getJoueur().getPersoChoisi().setPos(positionInit);   //Position de départ  
+        return joueur;
     } 
     
      /**
@@ -273,26 +281,32 @@ public class World {
      * Lance le tour de jeu du joueur
      * Il doit choisir entre se déplacer ou combattre
      * @param NbTour
+     * @throws java.lang.InterruptedException
      */
-    public void tourDeJeu(int NbTour){
+    public synchronized void tourDeJeu(int NbTour) throws InterruptedException{
         System.out.println("Tour "+NbTour);
-        System.out.println("Choisissez votre action: 1.Se déplacer - 2.Combattre");
-        Scanner scanner = new Scanner(System.in);
-        int choix = scanner.nextInt();
-        
+        System.out.println("Choisissez votre action: 1.Se déplacer - 2.Combattre - 3.Manger un aliment");
+        Random random = new Random();
+        while (command.isEmpty()) {
+            wait();  // Attend que le joueur entre une commande via l'interface graphique
+        }
+        int choix = Integer.parseInt(command); 
+        command = "";
+        Personnage jpers = joueur.getPersoChoisi();
+
         switch(choix){
             case 1 :
-                boolean Deplace = false;
-                while (! Deplace){
-                    System.out.println("Entrez la translation que vous voulez effectuer");      //à améliorer pour meilleure UX et permettre de rester statique (boucle infinie)
-                    int dx = scanner.nextInt();
-                    int dy = scanner.nextInt();
-                    Deplace = getPersoJoueur().deplace(this, dx, dy);
-                    }                                  
+                LinkedList<Point2D> casesAtteignables = jpers.casesAtteignables(this);
+                if (!casesAtteignables.isEmpty()){
+                        getJoueur().setEnDeplacement(true);
+                        System.out.println("Utilisez les flèches pour indiquer votre déplacement");  //le traitement des touches est effectué dans WorldGUI    
+                        while (getJoueur().isEnDeplacement()) {     //attendre jusqu'à la fin du déplacement
+                        }
+                }
+                else{System.out.println("Aucun déplacement possible, vous restez statique");}
                 break;
-                
             case 2 : 
-                LinkedList<Creature> creaturesAPortee = getPersoJoueur().creaturesAPortee(this, getPersoJoueur().getDistAttMax());
+                LinkedList<Creature> creaturesAPortee = jpers.creaturesAPortee(this, jpers.getDistAttMax());
                 if (creaturesAPortee.isEmpty()){
                         System.out.println("Aucune créature n'est à portée");
                     }
@@ -304,11 +318,52 @@ public class World {
                         c.affiche();
                         i++;
                     }
-                    int choixCombat = scanner.nextInt();
-                    getPersoJoueur().combattre(creaturesAPortee.get(choixCombat));
+                    while (command.isEmpty()) {
+                        wait();  // Attend que le joueur entre une commande via l'interface graphique
+                    }
+                    int choixCombat = Integer.parseInt(command);
+                    // ecrire sur le panneau l'issue du combat
+                    jpers.combattre(creaturesAPortee.get(choixCombat));
+                    command = "";
+                    
+                }
+                break;          
+                
+            case 3 : 
+                System.out.println("Choisissez la nourriture que vous voulez consommer :");
+                    int i = 0;
+                    if (!joueur.getInventaire().isEmpty()){
+                        for (Objet o : joueur.getInventaire()){//affiche les creatures à portee             
+                            System.out.println(i);
+                            o.affiche();
+                            i++;
+                        }
+                        while (command.isEmpty()) {
+                            wait();  // Attend que le joueur entre une commande via l'interface graphique
+                        }
+                        int choixNourriture = Integer.parseInt(command); ;
+                        //jpers.consommer(inventaire.get(i)));  //ajouter la conssomation de nourriture et un nuage toxique à la map
+                        command = "";
+                    }
+                    else{System.out.println("Vous n'avez pas d'objet dans votre inventaire");}
+                break;              
+        }
+        actualisationMorts();
+        
+        for (Personnage p : personnages) {
+            int dx = random.nextInt(3)-1;
+            int dy = random.nextInt(3)-1;
+            p.deplace(this, dx, dy);
+            
+            LinkedList<Creature> creaturesAPortee = p.creaturesAPortee(this, p.getDistAttMax());
+                if (creaturesAPortee.isEmpty()){
+                    break;
+                    }
+                else{
+                    p.combattre(creaturesAPortee.get(0));
                 }
                 break;            
-        }
+            }
     }
     
     /**
@@ -316,7 +371,7 @@ public class World {
      */
     public void afficheWorld() {
         System.out.println("Personnage du joueur :");
-        persoJoueur.affiche();
+        joueur.getPersoChoisi().affiche();
         
         System.out.println("Personnages :");
         for (Personnage p : personnages) {
@@ -358,5 +413,10 @@ public class World {
                 for (Monstre mDel : monstresMorts){      //on retire les personnages morts du monde ici pour éviter les conflits d'accès
                     monstres.remove(mDel); // Supprimer l'objet pDel
                 }        
+    }
+    
+    public synchronized void processCommand(String s){
+        command = s;    
+        notify();
     }
 }

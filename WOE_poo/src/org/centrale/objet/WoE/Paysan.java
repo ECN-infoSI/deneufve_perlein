@@ -4,6 +4,8 @@
  */
 package org.centrale.objet.WoE;
 
+import java.util.LinkedList;
+
 /**
  * Représente un paysan, héritant des caractéristiques d'un personnage.
  *
@@ -47,5 +49,11 @@ public class Paysan extends Personnage{
     @Override
     public void combattre(Creature c) {
         System.out.println("Le paysan ne peut pas combattre !");
+    }
+    
+    @Override
+    public LinkedList<Creature> creaturesAPortee(World w, int portee) {
+        System.out.println("Le paysan ne peut pas combattre !");
+        return new LinkedList<>();
     }
 }

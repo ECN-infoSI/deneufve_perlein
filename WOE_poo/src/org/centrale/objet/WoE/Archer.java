@@ -4,8 +4,8 @@
  */
 package org.centrale.objet.WoE;
 
+import java.util.LinkedList;
 import java.util.Random;
-import org.centrale.objet.WoE.Epee;
 
 /**
  * Classe représentant un archer dans le jeu.
@@ -67,8 +67,8 @@ public class Archer extends Personnage implements Combattant{
         setPagePar(getPagePar()+20+random.nextInt(10));
         setPageAtt(getPageAtt()+50+random.nextInt(10));
         setPtPar(getPtPar()+20+random.nextInt(10));
-        setDegAtt(getDegAtt()+1000+random.nextInt(10));   
-        setDistAttMax(300);   
+        setDegAtt(getDegAtt()+10+random.nextInt(10));   
+        setDistAttMax(3);   
         this.nbFleches = 5;
     }  
     
@@ -106,7 +106,6 @@ public class Archer extends Personnage implements Combattant{
                     int tirageDef = rand.nextInt(100);    
                     if(tirageDef<=c.getPagePar()){
                         c.setPtVie(c.getPtVie()-super.getDegAtt());
-                        System.out.println("Touché !");
                     }
                 }
             }
@@ -116,7 +115,6 @@ public class Archer extends Personnage implements Combattant{
                     int tirageAtt = rand.nextInt(100);
                     if(tirageAtt<=super.getPageAtt()){
                         c.setPtVie(c.getPtVie()-super.getDegAtt()); //à distance, le def subit directement les dégats 
-                        System.out.println("Touché !");
                     }
                 }
             }
@@ -124,5 +122,27 @@ public class Archer extends Personnage implements Combattant{
         else{
             System.out.println("La créature à combattre est trop loin !");
         }
+    }
+    
+    @Override
+    public LinkedList<Creature> creaturesAPortee(World w, int portee){
+        LinkedList<Creature> creaturesAPortee = new LinkedList<>();
+                    for (Personnage p : w.getPersonnages()) {
+                        if (p.getPos().distance(super.getPos())<=portee) {
+                            creaturesAPortee.add(p);
+                        }
+                    }
+                    for (Monstre m : w.getMonstres()) {
+                        if (m.getPos().distance(super.getPos())<=portee) {
+                            creaturesAPortee.add(m);
+                        }
+                    }
+                    
+                    if (w.getJoueur().getPersoChoisi().getPos().distance(super.getPos())<=portee) {
+                            creaturesAPortee.add(w.getJoueur().getPersoChoisi());
+                    }
+                    
+                    creaturesAPortee.remove(this);
+                    return creaturesAPortee;
     }
 }

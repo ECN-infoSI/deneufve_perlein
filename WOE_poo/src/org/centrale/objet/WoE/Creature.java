@@ -4,8 +4,8 @@
  */
 package org.centrale.objet.WoE;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Random;
 /**
  * Classe représentant une créature dans le jeu.
  */
@@ -193,68 +193,89 @@ public abstract class Creature implements Deplacable{
             this.pos = pos;
         }
         
-/**
+    /**
      * Déplace la créature aléatoirement une case horizontalement et/ou verticalement, en évitant les Creatures et limites de World.
      * 
      * @param w
+     * @param dx
+     * @param dy
+     * @return 
      */ 
     
     @Override
-    public void deplace(World w) {
-        Random gen = new Random() ; 
-        int dx = gen.nextInt(3) - 1 ; 
-        int dy = gen.nextInt(3) - 1 ;
+    public boolean deplace(World w, int dx, int dy) {
         Point2D nouvellePos = new Point2D(pos.getx() + dx, pos.gety() + dy);
-
-        // Vérification des limites de la carte
-        if (nouvellePos.getx() < 0 || nouvellePos.getx() >= w.getTaille() ||
-            nouvellePos.gety() < 0 || nouvellePos.gety() >= w.getTaille()) {
-            System.out.println("Deplacement impossible : hors des limites de la Map.");
-            return; // Ne pas déplacer si en dehors des limites
+        if (deplacementPossible(nouvellePos, w)){
+            // Si toutes les vérifications passent, on déplace le personnage
+            pos = nouvellePos; // Mise à jour de la position
+            boirePotion(w);
+            return true;
         }
-        // Vérification des collisions avec les autres w.getPersonnages()
-        for (Personnage p : w.getPersonnages()) {
-            if (!p.equals(this) && p.getPosition().equals(nouvellePos)) {   //le personnage peut rester statique
-                System.out.println("Deplacement impossible : collision avec un Personnage");
-                return; // Ne pas déplacer si un personnage est déjà à cette position
-            }
-        }
-        // Vérification des collisions avec les monstres
-        for (Monstre m : w.getMonstres()) {
-            if (m.getPosition().equals(nouvellePos)) {
-                return; // Ne pas déplacer si un monstre est déjà à cette position
-            }
-        }
-        
-        if (w.getPersoJoueur().getPos().equals(nouvellePos)) {
-                return; // Ne pas déplacer si le joueur est déjà à cette position
-            }
-        // Si toutes les vérifications passent, on déplace le personnage
-        pos = nouvellePos; // Mise à jour de la position
-        
-        LinkedList<Objet> potionsDel = new LinkedList<>();
-        for (Objet o : w.getObjets()) {
-            if (nouvellePos.equals(o.getPos()) && (o instanceof PotionSoin)) {
-                PotionSoin p = (PotionSoin) o; 
-                ptVie += p.getSoin(); 
-                potionsDel.add(o);
-                System.out.println("Potion de soin utilisee, points de vie : " + p.getSoin());
-            }
-        }
-        for (Objet pDel : potionsDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
-            LinkedList<Objet> objets = w.getObjets();
-            objets.remove(pDel); // Supprimer l'objet pDel
-            w.setObjets(objets); 
-        }
+        else{ return false; }
     }
     
+     /**
+     * Vérification des limites de la carte, de la limite de déplacement, des collisions
+     * 
+     * @param posTest
+     * @param w
+     * @return 
+     */ 
+    public boolean deplacementPossible(Point2D posTest, World w){
+        boolean libre = true;
+            if (posTest.getx() < 0 || posTest.getx() >= w.getTaille() ||
+                posTest.gety() < 0 || posTest.gety() >= w.getTaille() || posTest.distance(pos)>=2) { //les créatures peuvent se déplacer d'une case (>=2 pour la diagonale)
+                libre = false;
+            }
+            for (Personnage p : w.getPersonnages()) {
+                if (p.getPos().equals(posTest)) {
+                    libre = false;
+                }    
+            }
+            for (Monstre m : w.getMonstres()) {
+                if (m.getPos().equals(posTest)) {
+                    libre = false;
+                }
+            }
+            if (w.getJoueur().getPersoChoisi().getPos().equals(posTest)) {
+                libre = false;
+            }
+        return libre;
+    }
     
-    
- /**
-     * @return la position de la creature
-     */
-    public Point2D getPosition() {
-        return pos;
+    public LinkedList<Point2D> casesAtteignables(World w){
+        LinkedList<Point2D> casesAtteignables = new LinkedList<>();
+        for (int i=0;i<3;i++){
+            for (int j=0;j<3;j++){
+                Point2D posTestee = new Point2D(pos.getx() + i-1, pos.gety() + j-1);
+                if (deplacementPossible(posTestee,w)){
+                    casesAtteignables.add(posTestee); 
+                }
+            }
+        }
+        return casesAtteignables;
+    }
+
+    /**
+     * Permet à la créature de boire une potion sur sa case
+     * 
+     * @param w
+     */ 
+    public void boirePotion(World w){
+        ArrayList<Objet> potionsDel = new ArrayList<>();
+            for (Objet o : w.getObjets()) {
+                if (pos.equals(o.getPos()) && (o instanceof PotionSoin)) {
+                    PotionSoin p = (PotionSoin) o; 
+                    ptVie += p.getSoin(); 
+                    potionsDel.add(o);
+                    System.out.println("Potion de soin utilisee, points de vie : " + p.getSoin());
+                }
+            }
+            for (Objet pDel : potionsDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
+                LinkedList<Objet> objets = w.getObjets();
+                objets.remove(pDel);            // Supprimer l'objet pDel
+                w.setObjets(objets); 
+            }
     }
 
     public abstract void affiche(); 

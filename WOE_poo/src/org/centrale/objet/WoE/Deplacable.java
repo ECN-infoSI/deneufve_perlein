@@ -9,5 +9,7 @@ package org.centrale.objet.WoE;
  * @author benja
  */
 public interface Deplacable {
-    void deplace(World w);
+    
+    public boolean deplace(World w, int dx, int dy);
+
 }

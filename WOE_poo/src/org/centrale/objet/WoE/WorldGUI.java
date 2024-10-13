@@ -4,9 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Timer; 
 
 /**
  * Classe représentant l'interface graphique du monde du jeu.
@@ -15,7 +20,12 @@ public class WorldGUI extends JFrame {
 
     private JPanel worldPanel;   // Panneau pour afficher le monde
     private JTextArea infoPanel; // Panneau pour afficher les informations des entités
-    private World world;         // Instance du monde de jeu
+    private final World world;         // Instance du monde de jeu
+    private JTextField inputField; // Champ de texte pour l'entrée du joueur
+    
+    private int commandesTransmises = 0; 
+    private int dx = 0;
+    private int dy = 0;
 
     /**
      * Constructeur de la classe WorldGUI.
@@ -36,12 +46,42 @@ public class WorldGUI extends JFrame {
         // Création du panneau de la carte du monde
         worldPanel = new JPanel();
         worldPanel.setLayout(new GridLayout(world.getTaille(), world.getTaille(), 1, 1));
+        worldPanel.setFocusable(true); // Rendre le panneau focalisable
+        
+        // Ajout du KeyListener pour gérer les événements de clavier
+        worldPanel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                handleKeyPress(e); // Appel de la méthode personnalisée
+            }
+        });
 
         // Création du panneau d'information
         infoPanel = new JTextArea();
-        infoPanel.setEditable(true);
+        infoPanel.setEditable(false);
         infoPanel.setLineWrap(true); // Pour éviter le débordement du texte
 
+        // Champ de texte pour l'entrée de l'utilisateur
+        inputField = new JTextField();
+        inputField.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            String userInput = inputField.getText();
+            try {
+                world.processCommand(userInput);
+            } catch (Exception ex) {
+            infoPanel.append("Erreur lors de la prise en compte de la commande : " + ex.getMessage() + "\n");
+            Logger.getLogger(WorldGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            infoPanel.append(">> " + userInput + "\n" + "votre commande a été prise en compte" + "\n");
+            inputField.setText("");
+            worldPanel.requestFocusInWindow();  // Redemande le focus au worldPanel
+                }
+            });
+
+        
         // Ajouter les éléments à la fenêtre
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, worldPanel, new JScrollPane(infoPanel));
         splitPane.setDividerLocation(1500);
@@ -51,9 +91,72 @@ public class WorldGUI extends JFrame {
         JButton displayButton = new JButton("Afficher le Monde");
         displayButton.addActionListener((ActionEvent e) -> {
             afficherMonde(); // Afficher le monde quand le bouton est cliqué
+            worldPanel.requestFocusInWindow(); // Demander le focus au panneau après l'affichage
         });
-
         getContentPane().add(displayButton, BorderLayout.NORTH);
+        getContentPane().add(inputField, BorderLayout.SOUTH); // Ajouter le champ de texte en bas
+
+        setVisible(true);
+        worldPanel.requestFocusInWindow(); // Demander le focus au panneau à l'initialisation
+        
+        // Créer un flux de sortie temporaire pour capturer la sortie console
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos); // Créer un PrintStream à partir du ByteArrayOutputStream
+        System.setOut(ps); // Rediriger la sortie
+
+        // Capturer les sorties pour l'affichage
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(500); // Mettre à jour toutes les 500 ms
+                    infoPanel.setText(baos.toString()); // Mettre à jour le JTextArea avec les informations
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * Méthode qui gère les événements de touches pour le déplacement.
+     *
+     * @param e Événement de touche
+     */
+    private void handleKeyPress(KeyEvent e) {
+        Joueur joueur = world.getJoueur();  // Récupère le joueur du monde
+        if (joueur.isEnDeplacement()) {  // Si le joueur est en mode déplacement
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                    dx = -1;
+                    commandesTransmises++;
+                    break;
+                case KeyEvent.VK_DOWN:
+                    dx = 1;
+                    commandesTransmises++;
+                    break;
+                case KeyEvent.VK_LEFT:
+                    dy = -1;
+                    commandesTransmises++;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    dy = 1;
+                    commandesTransmises++;
+                    break;
+            }
+            if (commandesTransmises >= 2) { 
+                boolean deplace = joueur.getPersoChoisi().deplace(world, dx, dy);
+                if (deplace) {
+                    System.out.println("Vous vous êtes déplacé en position: " );
+                    joueur.getPersoChoisi().getPos().affiche();
+                    commandesTransmises = 0;
+                    dx = 0;
+                    dy = 0;
+                    joueur.setEnDeplacement(false);
+                } else {
+                    System.out.println("Déplacement impossible, entrez une direction valide.");
+                }
+            }
+        }
     }
 
     /**
@@ -86,9 +189,9 @@ public class WorldGUI extends JFrame {
                 boolean entityAdded = false;
 
                 // Si le joueur est sur cette case
-                if (world.getPersoJoueur().getPos().equals(point)) {
+                if (world.getJoueur().getPersoChoisi().getPos().equals(point)) {
                     button.setIcon(joueurIcon); // Image pour le joueur
-                    button.addActionListener(e -> afficherInfo(world.getPersoJoueur()));
+                    button.addActionListener(e -> afficherInfo(world.getJoueur().getPersoChoisi()));
                     entityAdded = true;
                 }
 
@@ -144,35 +247,25 @@ public class WorldGUI extends JFrame {
      * @param entity L'entité dont on veut afficher les informations
      */
     private void afficherInfo(Object entity) {
-        // Créer un flux de sortie temporaire pour capturer la sortie console
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(baos); // Créer un PrintStream à partir du ByteArrayOutputStream
-
-        // Sauvegarder la sortie standard actuelle
-        PrintStream oldOut = System.out;
-
-        try {
-            // Rediriger la sortie vers notre PrintStream temporaire
-            System.setOut(ps);
-
-            // Appeler la méthode affiche() de l'entité
-            if (entity instanceof Personnage) {
-                ((Personnage) entity).affiche();  // Afficher les informations du personnage
-            } else if (entity instanceof Monstre) {
-                ((Monstre) entity).affiche(); // Afficher les informations du monstre
-            } else if (entity instanceof Objet) {
-                ((Objet) entity).affiche(); // Afficher les informations de l'objet
-            }
-
-            // Récupérer le texte capturé dans la sortie console
-            String info = baos.toString(); // Convertir le contenu capturé en chaîne
-
-            // Afficher les informations dans le panneau d'information
-            infoPanel.setText(info); // Mettre à jour le JTextArea avec les informations
-
-        } finally {
-            // Rétablir la sortie standard
-            System.setOut(oldOut);
+        
+    // Appeler la méthode affiche() de l'entité
+        if (entity instanceof Personnage personnage) {
+            personnage.affiche();  // Afficher les informations du personnage
+        } else if (entity instanceof Monstre monstre) {
+            monstre.affiche(); // Afficher les informations du monstre
+        } else if (entity instanceof Objet objet) {
+            objet.affiche(); // Afficher les informations de l'objet
         }
+
+        // Récupérer le texte capturé dans la sortie console
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String info = baos.toString(); // Convertir le contenu capturé en chaîne
+
+        // Afficher les informations dans le panneau d'information
+        infoPanel.append(info + "\n"); // Append to allow multiple info displays
+        JScrollBar verticalScrollBar = ((JScrollPane) infoPanel.getParent().getParent()).getVerticalScrollBar();
+        verticalScrollBar.setValue(verticalScrollBar.getMaximum()); // Scroll to bottom automatically
+
     }
+
 }

@@ -3,7 +3,6 @@
  */
 
 package org.centrale.objet.WoE;
-
 import javax.swing.SwingUtilities;
 
 /**
@@ -11,9 +10,8 @@ import javax.swing.SwingUtilities;
  * MAIN
  */
 public class WoECN {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         World w = new World();
-        w.creeMondeAlea();
         
         // Interface graphique
         WorldGUI gui = new WorldGUI(w);
@@ -22,21 +20,9 @@ public class WoECN {
         int nbTour = 1;
         while(true){
             w.tourDeJeu(nbTour);
+            w.getJoueur().getPersoChoisi().affiche();
             SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
-            w.getPersoJoueur().affiche();
-            for (Personnage perso : w.getPersonnages()) {
-                    // Déplacer chaque personnage d'une unité dans une direction aléatoire
-                    perso.deplace(w);
-                    
-            }
-            
-            for (Monstre monstre : w.getMonstres()) {
-            // Déplacer chaque personnage d'une unité dans une direction aléatoire
-                    monstre.deplace(w);
-                    
-            }
             nbTour++;
-            SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
         }
     }
 }

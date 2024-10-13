@@ -7,6 +7,7 @@ package org.centrale.objet.WoE;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -129,4 +130,5 @@ public abstract class Personnage extends Creature {
     }
     
     public abstract void combattre(Creature c);
+    public abstract LinkedList<Creature> creaturesAPortee(World w, int portee);
 }
