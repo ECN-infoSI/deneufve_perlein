@@ -28,7 +28,7 @@ public class Nourriture extends Objet{
     
     public Nourriture(){
         super() ; 
-        this.temps_effet = 0 ; 
+        this.temps_effet = 2 ; 
     }
     
     public int getTemps(){

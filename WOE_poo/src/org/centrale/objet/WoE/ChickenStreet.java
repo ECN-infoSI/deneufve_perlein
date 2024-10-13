@@ -14,9 +14,9 @@ public class ChickenStreet extends Nourriture{
     private int par ; 
     
     
-    public ChickenStreet(String n, String s, int pds, Point2D pos, int d, int degaaa) {
+    public ChickenStreet(String n, String s, int pds, Point2D pos, int d, int par) {
         super(n,s,pds,pos,d) ; 
-        this.par = degaaa ; 
+        this.par = par ; 
 }
     public ChickenStreet(Nourriture n, int de){
         super(n); 
@@ -28,11 +28,11 @@ public class ChickenStreet extends Nourriture{
         this.par = 1 ; 
     }
     
-    public int getDegats() {
+    public int getPar() {
         return par ; 
     }
     
-    public void setDegats(int d) {
+    public void setPar(int d) {
         par = d ;
     }
     

@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 /**
  * Représente le monde du jeu, contenant différentes entités comme des personnages
@@ -216,23 +217,41 @@ public class World{
      * @return la liste d'objets
      */
     private LinkedList<Objet> creerObjetsAlea() {
-        LinkedList<Objet> potionalea = new LinkedList<>();
+        LinkedList<Objet> objetsAlea = new LinkedList<>();
         Random random = new Random();
         
-        int nbPotion = random.nextInt(taille*taille/10);  // Pour que la map ne soit pas pleine de mobs
-        int nbEpee = random.nextInt(taille*taille/10);  
+        int nbPotion = random.nextInt(taille*taille/100);  // Pour que la map ne soit pas pleine de mobs
+        int nbEpee = random.nextInt(taille*taille/100);  
+        int nbNuage = 1;
+        int nbMadras = random.nextInt(taille*taille/100);
+        int nbStreet = random.nextInt(taille*taille/100);
 
         for (int i = 0; i < nbPotion; i++) {
             Objet potion = new PotionSoin();
-            potionalea.add(potion); 
+            objetsAlea.add(potion); 
         }
 
         for (int i = 0; i < nbEpee; i++) {
             Objet epee = new Epee();
-            potionalea.add(epee);
+            objetsAlea.add(epee);
+        }
+        
+        for (int i = 0; i < nbEpee; i++) {
+            Objet street = new ChickenStreet();
+            objetsAlea.add(street);
+        }
+        
+        for (int i = 0; i < nbEpee; i++) {
+            Objet madras = new PouletMadras();
+            objetsAlea.add(madras);
+        }
+        
+        for (int i = 0; i < nbEpee; i++) {
+            Objet nuage = new NuageToxique();
+            objetsAlea.add(nuage);
         }
 
-        return potionalea;
+        return objetsAlea;
     }
     
     
@@ -285,6 +304,22 @@ public class World{
      */
     public synchronized void tourDeJeu(int NbTour) throws InterruptedException{
         System.out.println("Tour "+NbTour);
+        // perte de durée des objets: à up pour ne faire descendre que la durée de la nourriture consmmée: nouvelle liste dans Joueur ? + indiquer les aliments qui expirent
+        ArrayList<Objet> nourritureDel = new ArrayList<Objet>();
+        for (Objet o : joueur.getInventaire()) {
+            if (o instanceof Nourriture) {
+                Nourriture n = (Nourriture) o; 
+                n.setTemps(n.getTemps()-1);
+                if (n.getTemps()<=0){
+                    nourritureDel.add(o);
+                }
+            }
+        }
+
+        for (Objet o : nourritureDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
+            joueur.getInventaire().remove(o);            // Supprimer l'objet o
+        }
+        
         System.out.println("Choisissez votre action: 1.Se déplacer - 2.Combattre - 3.Manger un aliment");
         Random random = new Random();
         while (command.isEmpty()) {
@@ -341,13 +376,39 @@ public class World{
                         while (command.isEmpty()) {
                             wait();  // Attend que le joueur entre une commande via l'interface graphique
                         }
-                        int choixNourriture = Integer.parseInt(command); ;
-                        //jpers.consommer(inventaire.get(i)));  //ajouter la conssomation de nourriture et un nuage toxique à la map
+                        int choixNourriture = Integer.parseInt(command); 
+                        Objet nConso = joueur.getInventaire().get(choixNourriture);
+                        System.out.println("Objet consommé, vous avez un bonus de ");
+                        if (nConso instanceof ChickenStreet){
+                            ChickenStreet cConso = (ChickenStreet) nConso;
+                            System.out.println(cConso.getPar()+"points de parade");
+                            jpers.setPtPar(jpers.getPtPar()+cConso.getPar());
+                        }
+                        else{
+                            PouletMadras pConso = (PouletMadras) nConso;
+                            System.out.println(pConso.getDegats()+"points de dégats");
+                            jpers.setDegAtt(jpers.getDegAtt()+pConso.getDegats());
+                        }
                         command = "";
                     }
                     else{System.out.println("Vous n'avez pas d'objet dans votre inventaire");}
-                break;              
+                break;  
+                
+            case 4 : 
+            Objet objetDel = null;
+                for (Objet o : objets) {
+                    if (jpers.getPos().equals(o.getPos())) {
+                        joueur.getInventaire().add(o);
+                        objetDel =o;
+                    }
+            }
+            objets.remove(objetDel);            // Supprimer l'objet objetDel en évitant les conflits d'accès
+            System.out.println("Vous avez ramassé:");
+            objetDel.affiche();
+            break;
         }
+        
+        
         actualisationMorts();
         
         for (Personnage p : personnages) {
