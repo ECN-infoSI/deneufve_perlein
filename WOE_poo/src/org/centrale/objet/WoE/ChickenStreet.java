@@ -25,6 +25,7 @@ public class ChickenStreet extends Nourriture{
     
     public ChickenStreet() {
         super(); 
+        super.setNom(this.getClass().getSimpleName());
         this.par = 1 ; 
     }
     

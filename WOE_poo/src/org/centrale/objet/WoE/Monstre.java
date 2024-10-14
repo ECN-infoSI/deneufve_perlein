@@ -4,6 +4,8 @@
  */
 package org.centrale.objet.WoE;
 
+import java.util.LinkedList;
+
 /**
  * Classe représentant un monstre dans le jeu.
  * Hérite de la classe Creature.
@@ -53,4 +55,5 @@ public abstract class Monstre extends Creature {
         System.out.println("Portée de parade = " + super.getPagePar());
         super.getPos().affiche();
     }
+    
 }

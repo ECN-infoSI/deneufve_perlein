@@ -51,6 +51,7 @@ public class NuageToxique extends Objet{
      */
     public NuageToxique() {
         super() ; 
+        super.setNom(this.getClass().getSimpleName());
         this.degats = 10 ;  
         this.rayon = 3 ;
     }

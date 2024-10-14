@@ -1,10 +1,12 @@
 package org.centrale.objet.WoE;
 
+import java.util.LinkedList;
+
 /**
  * Classe représentant un lapin, un type de monstre dans le jeu.
  * Hérite de la classe Monstre.
  */
-public class Lapin extends Monstre {
+public class Lapin extends Monstre{
 
     /**
      * Constructeur avec paramètres.

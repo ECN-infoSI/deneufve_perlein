@@ -45,6 +45,7 @@ public class PotionSoin extends Objet {
      */
     public PotionSoin() {
         super() ; 
+        super.setNom(this.getClass().getSimpleName());
         this.soin = 10 ;  
     }
 

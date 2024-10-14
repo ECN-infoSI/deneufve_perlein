@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.Random ;
 import java.util.Scanner;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 /**
@@ -236,17 +234,17 @@ public class World{
             objetsAlea.add(epee);
         }
         
-        for (int i = 0; i < nbEpee; i++) {
+        for (int i = 0; i < nbStreet; i++) {
             Objet street = new ChickenStreet();
             objetsAlea.add(street);
         }
         
-        for (int i = 0; i < nbEpee; i++) {
+        for (int i = 0; i < nbMadras; i++) {
             Objet madras = new PouletMadras();
             objetsAlea.add(madras);
         }
         
-        for (int i = 0; i < nbEpee; i++) {
+        for (int i = 0; i < nbNuage; i++) {
             Objet nuage = new NuageToxique();
             objetsAlea.add(nuage);
         }
@@ -317,10 +315,12 @@ public class World{
         }
 
         for (Objet o : nourritureDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
-            joueur.getInventaire().remove(o);            // Supprimer l'objet o
+            ArrayList<Objet> effets = joueur.getEffets(); 
+            effets.remove(o); 
+            joueur.setEffets(effets);
         }
         
-        System.out.println("Choisissez votre action: 1.Se déplacer - 2.Combattre - 3.Manger un aliment");
+        System.out.println("Choisissez votre action: 1.Se déplacer - 2.Combattre - 3.Manger un aliment - 4.Ramasser un objet");
         Random random = new Random();
         while (command.isEmpty()) {
             wait();  // Attend que le joueur entre une commande via l'interface graphique
@@ -341,7 +341,8 @@ public class World{
                 else{System.out.println("Aucun déplacement possible, vous restez statique");}
                 break;
             case 2 : 
-                LinkedList<Creature> creaturesAPortee = jpers.creaturesAPortee(this, jpers.getDistAttMax());
+                Combattant jcomb = (Combattant) jpers;
+                LinkedList<Creature> creaturesAPortee = jcomb.creaturesAPortee(this, jpers.getDistAttMax());
                 if (creaturesAPortee.isEmpty()){
                         System.out.println("Aucune créature n'est à portée");
                     }
@@ -358,7 +359,10 @@ public class World{
                     }
                     int choixCombat = Integer.parseInt(command);
                     // ecrire sur le panneau l'issue du combat
-                    jpers.combattre(creaturesAPortee.get(choixCombat));
+                    Creature creatureCombattue = creaturesAPortee.get(choixCombat);
+                    System.out.println("Vous allez combattre une créature ayant "+creatureCombattue.getPtVie()+"points de vie,"+creatureCombattue.getPagePar()+" pourcentage de parade et"+creatureCombattue.getPtPar()+" points de parade /n"+"Vous avez"+jpers.getPageAtt()+"poourcentage d'attaque et"+jpers.getDegAtt()+"points de dégats d'attaque");
+                    jcomb.combattre(creatureCombattue);
+                    System.out.println("Il reste "+creatureCombattue.getPtVie()+"points de vie à la créature");
                     command = "";
                     
                 }
@@ -389,6 +393,11 @@ public class World{
                             System.out.println(pConso.getDegats()+"points de dégats");
                             jpers.setDegAtt(jpers.getDegAtt()+pConso.getDegats());
                         }
+                        ArrayList<Objet> effets = joueur.getEffets(); 
+                        effets.add(nConso); 
+                        joueur.setEffets(effets); 
+                        joueur.getInventaire().remove(nConso);
+                        
                         command = "";
                     }
                     else{System.out.println("Vous n'avez pas d'objet dans votre inventaire");}
@@ -416,15 +425,37 @@ public class World{
             int dy = random.nextInt(3)-1;
             p.deplace(this, dx, dy);
             
-            LinkedList<Creature> creaturesAPortee = p.creaturesAPortee(this, p.getDistAttMax());
+            
+            if (p instanceof Combattant){
+                Combattant co = (Combattant) p;
+                LinkedList<Creature> creaturesAPortee = co.creaturesAPortee(this, p.getDistAttMax());
                 if (creaturesAPortee.isEmpty()){
                     break;
                     }
                 else{
-                    p.combattre(creaturesAPortee.get(0));
+                    co.combattre(creaturesAPortee.get(0));
                 }
-                break;            
+                break; 
             }
+        }
+        
+        for (Monstre m : monstres) {
+            int dx = random.nextInt(3)-1;
+            int dy = random.nextInt(3)-1;
+            m.deplace(this, dx, dy);
+            
+            if (m instanceof Combattant){
+                Combattant co = (Combattant) m;
+                LinkedList<Creature> creaturesAPortee = co.creaturesAPortee(this, 1);
+                    if (creaturesAPortee.isEmpty()){
+                        break;
+                        }
+                    else{
+                        co.combattre(creaturesAPortee.get(0));
+                    }
+                    break;            
+                }
+        }
     }
     
     /**
@@ -459,6 +490,7 @@ public class World{
                 for (Personnage p : personnages) {
                     if (p.getPtVie()<=0) {
                         personnagesMorts.add(p);
+                        System.out.println("Le personnage "+p.getNom() + "est mort");
                     }
                 }
                 
@@ -466,6 +498,9 @@ public class World{
                 for (Monstre m : monstres) {
                     if (m.getPtVie()<=0) {
                         monstresMorts.add(m);
+                        System.out.println("Le monstre en position ");
+                        m.getPos().affiche();
+                        System.out.println("est mort");
                     }
                 }
                 for (Personnage pDel : personnagesMorts){      //on retire les personnages morts du monde ici pour éviter les conflits d'accès

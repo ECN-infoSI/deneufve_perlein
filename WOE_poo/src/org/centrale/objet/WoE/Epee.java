@@ -4,6 +4,11 @@
  */
 package org.centrale.objet.WoE;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
+import static org.centrale.objet.WoE.Personnage.loadNamesFromFile;
+
 /**
  * Classe représentant une épée, un type d'objet dans le jeu.
  * Hérite de la classe Objet.
@@ -28,6 +33,7 @@ public class Epee extends Objet {
     public Epee(String n, String s, int pds, Point2D pos, int d) {
         super(n,s,pds,pos) ; 
         this.degats = d ;
+        
     }
     
     /**
@@ -46,7 +52,17 @@ public class Epee extends Objet {
      */
     public Epee() {
         super() ; 
-        this.degats = 10 ;  
+        this.degats = 10 ;
+        try {
+            // Charger noms depuis les fichiers texte
+            List<String> noms = loadNamesFromFile("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/sword_names_frappe_du_quartier_100.txt");
+            // Générer et afficher un nom
+            Random random = new Random();
+            super.setNom(noms.get(random.nextInt(noms.size())));
+        } catch (IOException e) {
+            super.setNom("frappe du quartier");
+        }
+        
     }
 
     /**

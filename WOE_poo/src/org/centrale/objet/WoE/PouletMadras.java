@@ -22,6 +22,7 @@ public class PouletMadras extends Nourriture {
     
     public PouletMadras() {
         super(); 
+        super.setNom(this.getClass().getSimpleName());
         this.degats = 1 ; 
     }
     

@@ -101,12 +101,16 @@ public class Guerrier extends Personnage implements Combattant{
     public void combattre(Creature c) {
         Random rand = new Random();
         double dist = super.getPos().distance(c.getPos());
+        System.out.println(getNom()+" attaque la créature en position");
+        c.getPos().affiche();
         if(dist==1){  //Le guerrier n'ayant pas de projectiles, seule la méthode au corps-à-corps est implémentée
                 int tirageAtt = rand.nextInt(100);
+                System.out.println(" _"+"\n"+"|"+tirageAtt+"|");
                 if(tirageAtt<=super.getPageAtt()){
                     int tirageDef = rand.nextInt(100);    
                     if(tirageDef<=c.getPagePar()){
                         c.setPtVie(c.getPtVie()-super.getDegAtt());
+                        System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie());
                     }
                 }
         }        

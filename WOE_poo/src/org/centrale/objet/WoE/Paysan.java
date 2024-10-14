@@ -46,14 +46,4 @@ public class Paysan extends Personnage{
         super();
     }
     
-    @Override
-    public void combattre(Creature c) {
-        System.out.println("Le paysan ne peut pas combattre !");
-    }
-    
-    @Override
-    public LinkedList<Creature> creaturesAPortee(World w, int portee) {
-        System.out.println("Le paysan ne peut pas combattre !");
-        return new LinkedList<>();
-    }
 }

@@ -15,6 +15,7 @@ import java.util.Scanner;
 public class Joueur {
     private Personnage persoJoueur;
     private ArrayList<Objet> inventaire;
+    private ArrayList<Objet> effets;
     public boolean enDeplacement;
 
     public Joueur(Personnage persoJoueur) {
@@ -38,6 +39,14 @@ public class Joueur {
 
     public void setInventaire(ArrayList<Objet> inventaire) {
         this.inventaire = inventaire;
+    }
+
+    public ArrayList<Objet> getEffets() {
+        return effets;
+    }
+
+    public void setEffets(ArrayList<Objet> effets) {
+        this.effets = effets;
     }
 
     public void setPersoChoisi(Personnage persoJoueur) {

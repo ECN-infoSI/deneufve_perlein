@@ -128,7 +128,4 @@ public abstract class Personnage extends Creature {
     public static List<String> loadNamesFromFile(String filePath) throws IOException {
         return Files.readAllLines(Paths.get(filePath));
     }
-    
-    public abstract void combattre(Creature c);
-    public abstract LinkedList<Creature> creaturesAPortee(World w, int portee);
 }

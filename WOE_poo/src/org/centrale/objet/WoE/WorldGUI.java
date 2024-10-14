@@ -155,6 +155,7 @@ public class WorldGUI extends JFrame {
                 } else {
                     System.out.println("Déplacement impossible, entrez une direction valide.");
                 }
+                
             }
         }
     }

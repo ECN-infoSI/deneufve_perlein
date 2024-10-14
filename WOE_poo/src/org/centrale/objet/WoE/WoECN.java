@@ -20,8 +20,6 @@ public class WoECN {
         int nbTour = 1;
         while(true){
             w.tourDeJeu(nbTour);
-            w.getJoueur().getPersoChoisi().affiche();
-            SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
             nbTour++;
         }
     }
