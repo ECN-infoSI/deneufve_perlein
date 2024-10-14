@@ -41,11 +41,12 @@ public class Loup extends Monstre implements Combattant{
      */
     public Loup() {
         super() ; 
-        setPtVie(getPtVie()+20);
-        setPagePar(getPagePar()+20);
-        setPageAtt(getPageAtt()+20);
-        setPtPar(getPtPar()+20);
-        setDegAtt(getDegAtt()+20);
+        Random random = new Random();
+        setPtVie(20+random.nextInt(20));
+        setPagePar(10+random.nextInt(20));
+        setPageAtt(40+random.nextInt(10));
+        setPtPar(20+random.nextInt(10));
+        setDegAtt(40+random.nextInt(10));
     }   
     
     /**
@@ -71,6 +72,12 @@ public class Loup extends Monstre implements Combattant{
                         c.setPtVie(c.getPtVie()-super.getDegAtt());
                         System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie());
                     }
+                    else{
+                        System.out.println("Raté !");
+                    }
+                }
+                else{
+                        System.out.println("Raté !");
                 }
         }        
         else{

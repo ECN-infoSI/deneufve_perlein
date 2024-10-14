@@ -24,6 +24,7 @@ public class Joueur {
             throw new IllegalArgumentException("Un Paysan ne peut pas être choisi par le joueur");
         }
         this.inventaire = new ArrayList<Objet>();
+        this.effets = new ArrayList<Objet>();
         this.enDeplacement = false;
     }
 
@@ -31,6 +32,7 @@ public class Joueur {
         persoJoueur = new Guerrier();
         this.inventaire = new ArrayList<Objet>();
         this.enDeplacement = false;
+        this.effets = new ArrayList<Objet>();
     }
 
     public ArrayList<Objet> getInventaire() {

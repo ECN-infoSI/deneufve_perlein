@@ -8,6 +8,7 @@ import java.util.Random ;
 import java.util.Scanner;
 
 import java.util.ArrayList;
+import javax.swing.SwingUtilities;
 
 /**
  * Représente le monde du jeu, contenant différentes entités comme des personnages
@@ -39,7 +40,7 @@ public class World{
      * avec une taille de 50.
      */
     public World() {
-        this.taille = 50;
+        this.taille = 20;
         this.personnages = creerPersonnagesAlea();
         this.monstres = creerMonstresAlea();
         this.objets = creerObjetsAlea();
@@ -136,7 +137,6 @@ public class World{
     
     public final Joueur creationJoueur(Point2D positionInit){
         Scanner scanner = new Scanner(System.in);
-        
         System.out.println("Choisissez la classe de votre personnage parmi: 1.Guerrier - 2.Archer");
         int choix = scanner.nextInt();
         joueur = new Joueur();
@@ -149,7 +149,7 @@ public class World{
                 joueur.setPersoChoisi(new Archer()); 
                 break;
         }
-        getJoueur().getPersoChoisi().setPos(positionInit);   //Position de départ  
+        getJoueur().getPersoChoisi().setPos(positionInit);   //Position de départ
         return joueur;
     } 
     
@@ -298,43 +298,57 @@ public class World{
      * Lance le tour de jeu du joueur
      * Il doit choisir entre se déplacer ou combattre
      * @param NbTour
+     * @param gui
      * @throws java.lang.InterruptedException
      */
-    public synchronized void tourDeJeu(int NbTour) throws InterruptedException{
-        System.out.println("Tour "+NbTour);
+    public synchronized void tourDeJeu(int NbTour, WorldGUI gui) throws InterruptedException{
+        System.out.println("\n Tour "+NbTour);
+        Personnage jpers = joueur.getPersoChoisi();
+        
         // perte de durée des objets: à up pour ne faire descendre que la durée de la nourriture consmmée: nouvelle liste dans Joueur ? + indiquer les aliments qui expirent
         ArrayList<Objet> nourritureDel = new ArrayList<Objet>();
-        for (Objet o : joueur.getInventaire()) {
-            if (o instanceof Nourriture) {
-                Nourriture n = (Nourriture) o; 
-                n.setTemps(n.getTemps()-1);
-                if (n.getTemps()<=0){
-                    nourritureDel.add(o);
+        if (!joueur.getEffets().isEmpty()){
+            for (Objet o : joueur.getEffets()) {
+                if (o instanceof Nourriture) {
+                    Nourriture n = (Nourriture) o; 
+                    n.setTemps(n.getTemps()-1);
+                    if (n.getTemps()<=0){
+                        nourritureDel.add(o);
+                    }
+                }
+            }
+            for (Objet o : nourritureDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
+                ArrayList<Objet> effets = joueur.getEffets(); 
+                effets.remove(o); 
+                joueur.setEffets(effets);
+                if (o instanceof ChickenStreet){
+                                ChickenStreet cConso = (ChickenStreet) o;
+                                System.out.println("-"+cConso.getPar()+"points de parade");
+                                jpers.setPtPar(jpers.getPtPar()-cConso.getPar());
+                            }
+                else{
+                                PouletMadras pConso = (PouletMadras) o;
+                                System.out.println("-"+pConso.getDegats()+"points de dégats");
+                                jpers.setDegAtt(jpers.getDegAtt()-pConso.getDegats());
                 }
             }
         }
-
-        for (Objet o : nourritureDel){      //on retire les potions bus du monde ici pour éviter les conflits d'accès
-            ArrayList<Objet> effets = joueur.getEffets(); 
-            effets.remove(o); 
-            joueur.setEffets(effets);
-        }
         
-        System.out.println("Choisissez votre action: 1.Se déplacer - 2.Combattre - 3.Manger un aliment - 4.Ramasser un objet");
+        System.out.println("\n Choisissez votre action: 1.Se déplacer - 2.Combattre - 3.Manger un aliment - 4.Ramasser un objet");
         Random random = new Random();
         while (command.isEmpty()) {
             wait();  // Attend que le joueur entre une commande via l'interface graphique
         }
         int choix = Integer.parseInt(command); 
+        
         command = "";
-        Personnage jpers = joueur.getPersoChoisi();
 
         switch(choix){
             case 1 :
                 LinkedList<Point2D> casesAtteignables = jpers.casesAtteignables(this);
                 if (!casesAtteignables.isEmpty()){
                         getJoueur().setEnDeplacement(true);
-                        System.out.println("Utilisez les flèches pour indiquer votre déplacement");  //le traitement des touches est effectué dans WorldGUI    
+                        System.out.println("\n Utilisez les flèches pour indiquer votre déplacement");  //le traitement des touches est effectué dans WorldGUI    
                         while (getJoueur().isEnDeplacement()) {     //attendre jusqu'à la fin du déplacement
                         }
                 }
@@ -347,24 +361,32 @@ public class World{
                         System.out.println("Aucune créature n'est à portée");
                     }
                 else{
-                    System.out.println("Choisissez la créature que vous voulez combattre:");
+                    System.out.println("\n Choisissez un monstre à combattre (0 à " + (creaturesAPortee.size() - 1 + ":"));
                     int i = 0;
                     for (Creature c : creaturesAPortee){//affiche les creatures à portee             
-                        System.out.println(i);
+                        System.out.println("\n" +i);
                         c.affiche();
                         i++;
                     }
-                    while (command.isEmpty()) {
-                        wait();  // Attend que le joueur entre une commande via l'interface graphique
-                    }
+                    boolean selectionValide = false;
+                    while (!selectionValide) {
+                        while (command.isEmpty()) {
+                            wait();  // Attend que le joueur entre une commande via l'interface graphique
+                        }
                     int choixCombat = Integer.parseInt(command);
-                    // ecrire sur le panneau l'issue du combat
-                    Creature creatureCombattue = creaturesAPortee.get(choixCombat);
-                    System.out.println("Vous allez combattre une créature ayant "+creatureCombattue.getPtVie()+"points de vie,"+creatureCombattue.getPagePar()+" pourcentage de parade et"+creatureCombattue.getPtPar()+" points de parade /n"+"Vous avez"+jpers.getPageAtt()+"poourcentage d'attaque et"+jpers.getDegAtt()+"points de dégats d'attaque");
-                    jcomb.combattre(creatureCombattue);
-                    System.out.println("Il reste "+creatureCombattue.getPtVie()+"points de vie à la créature");
+                    // Vérifier que l'entrée est valide
+                    if (choixCombat >= 0 && choixCombat < creaturesAPortee.size()) {
+                        Creature cible = creaturesAPortee.get(choixCombat);
+                        System.out.println("Vous allez combattre une créature ayant "+cible.getPtVie()+" points de vie, vous avez "+jpers.getPageAtt()+",pourcentage d'attaque et "+jpers.getDegAtt()+" points de dégats d'attaque");
+                        jcomb.combattre(cible);
+                        System.out.println("Il reste "+cible.getPtVie()+"points de vie à la créature");
+                        selectionValide = true;  // Sortir de la boucle
+                    } else {
+                        System.out.println("Entrée non valide. Veuillez entrer un nombre valide.\n");
+                    }
+                    }
+                   
                     command = "";
-                    
                 }
                 break;          
                 
@@ -416,9 +438,8 @@ public class World{
             objetDel.affiche();
             break;
         }
-        
-        
-        actualisationMorts();
+        actualisationMorts(gui);
+        SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
         
         for (Personnage p : personnages) {
             int dx = random.nextInt(3)-1;
@@ -438,6 +459,7 @@ public class World{
                 break; 
             }
         }
+        SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
         
         for (Monstre m : monstres) {
             int dx = random.nextInt(3)-1;
@@ -456,6 +478,7 @@ public class World{
                     break;            
                 }
         }
+        SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
     }
     
     /**
@@ -484,7 +507,7 @@ public class World{
     /**
      * Retire du monde les personnages et monstres morts
      */
-    public void actualisationMorts(){
+    public void actualisationMorts(WorldGUI gui){
         //disparition des persos morts
         LinkedList<Personnage> personnagesMorts = new LinkedList<>();
                 for (Personnage p : personnages) {
@@ -508,7 +531,28 @@ public class World{
                 }
                 for (Monstre mDel : monstresMorts){      //on retire les personnages morts du monde ici pour éviter les conflits d'accès
                     monstres.remove(mDel); // Supprimer l'objet pDel
-                }        
+                }    
+                
+                SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
+    }
+    
+    public Boolean win(){
+        if (monstres.isEmpty() && personnages.isEmpty()){
+                System.out.println("BRAVO, VOUS AVEZ GAGNÉ");
+                return true;
+        }
+        return false;
+    }
+    
+    public Boolean lose(){
+        if (joueur.getPersoChoisi().getPtVie()<=0) {
+                        System.out.println("Vous êtes mort");
+                        while(true){
+                            System.out.println("GAME OVER");
+                            return true;
+                        }
+                    }
+        return false;
     }
     
     public synchronized void processCommand(String s){

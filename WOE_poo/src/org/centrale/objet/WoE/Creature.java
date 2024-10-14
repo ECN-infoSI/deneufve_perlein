@@ -77,10 +77,10 @@ public abstract class Creature implements Deplacable{
      * Constructeur par défaut.
      */
     public Creature() {
-        ptVie = 100;
-        degAtt = 5;
+        ptVie = 10;
+        degAtt = 0;
         ptPar= 5;
-        pageAtt = 20;
+        pageAtt = 0;
         pagePar= 20;
         pos = new Point2D(0,0);        
     }

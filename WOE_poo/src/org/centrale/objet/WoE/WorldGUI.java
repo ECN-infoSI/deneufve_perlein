@@ -64,22 +64,26 @@ public class WorldGUI extends JFrame {
         // Champ de texte pour l'entrée de l'utilisateur
         inputField = new JTextField();
         inputField.addActionListener(new ActionListener() {
-            
             @Override
             public void actionPerformed(ActionEvent e) {
-            String userInput = inputField.getText();
-            try {
-                world.processCommand(userInput);
-            } catch (Exception ex) {
-            infoPanel.append("Erreur lors de la prise en compte de la commande : " + ex.getMessage() + "\n");
-            Logger.getLogger(WorldGUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            infoPanel.append(">> " + userInput + "\n" + "votre commande a été prise en compte" + "\n");
-            inputField.setText("");
-            worldPanel.requestFocusInWindow();  // Redemande le focus au worldPanel
+                String userInput = inputField.getText();
+                try {
+                    world.processCommand(userInput);
+                } catch (Exception ex) {
+                    infoPanel.append("Erreur lors de la prise en compte de la commande : " + ex.getMessage() + "\n");
+                    Logger.getLogger(WorldGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            });
+
+                infoPanel.append(">> " + userInput + "\n" + "votre commande a été prise en compte" + "\n");
+                inputField.setText("");
+                worldPanel.requestFocusInWindow();  // Redemande le focus au worldPanel
+
+                // Faire défiler automatiquement vers le bas
+                JScrollBar verticalScrollBar = ((JScrollPane) infoPanel.getParent().getParent()).getVerticalScrollBar();
+                verticalScrollBar.setValue(verticalScrollBar.getMaximum()); // Scroll to bottom
+            }
+        });
+
 
         
         // Ajouter les éléments à la fenêtre
@@ -170,68 +174,97 @@ public class WorldGUI extends JFrame {
         LinkedList<Objet> objets = world.getObjets();
 
         // Charger les images avec redimensionnement
-        ImageIcon joueurIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/joueur.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-        ImageIcon personnageIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/personnage.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-        ImageIcon monstreIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/monstre.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-        ImageIcon objetIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/objet.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-        ImageIcon herbe = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/herbe.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        ImageIcon joueurIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/joueur.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon personnageIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/personnage.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon potionIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/potion.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon herbeIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/herbe.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon epeeIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/epee.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon loupIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/loup.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon lapinIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/lapin.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon nourritureIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/nourriture.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon nuageIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/nuage.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
 
-        // Créer des boutons pour représenter chaque case de la grille
+    // Créer des boutons pour représenter chaque case de la grille
         for (int i = 0; i < world.getTaille(); i++) {
             for (int j = 0; j < world.getTaille(); j++) {
                 JButton button = new JButton();
-                button.setPreferredSize(new Dimension(50, 50)); // Taille préférée pour le bouton
-                button.setMinimumSize(new Dimension(50, 50)); // Taille minimale
-                button.setMaximumSize(new Dimension(50, 50)); // Taille maximale
+                button.setPreferredSize(new Dimension(100, 100)); // Taille préférée pour le bouton
+                button.setMinimumSize(new Dimension(100, 100)); // Taille minimale
+                button.setMaximumSize(new Dimension(100, 100)); // Taille maximale
 
                 Point2D point = new Point2D(i, j);
+                
+                if (!world.lose() && !world.win()){
+                    // Vérifier si un personnage, un monstre ou un objet est à cette position
+                    boolean entityAdded = false;
 
-                // Vérifier si un personnage, un monstre ou un objet est à cette position
-                boolean entityAdded = false;
+                    // Si le joueur est sur cette case
+                    if (world.getJoueur().getPersoChoisi().getPos().equals(point)) {
+                        button.setIcon(joueurIcon); // Image pour le joueur
+                        button.addActionListener(e -> afficherInfo(world.getJoueur().getPersoChoisi()));
+                        entityAdded = true;
+                    }
 
-                // Si le joueur est sur cette case
-                if (world.getJoueur().getPersoChoisi().getPos().equals(point)) {
-                    button.setIcon(joueurIcon); // Image pour le joueur
-                    button.addActionListener(e -> afficherInfo(world.getJoueur().getPersoChoisi()));
-                    entityAdded = true;
-                }
-
-                // Si ce n'est pas le joueur, vérifier les autres entités
-                if (!entityAdded) {
-                    for (Personnage p : personnages) {
-                        if (p.getPos().equals(point)) {
-                            button.setIcon(personnageIcon); // Image pour un personnage
-                            button.addActionListener(e -> afficherInfo(p));
-                            entityAdded = true;
-                            break;
+                    // Si ce n'est pas le joueur, vérifier les autres entités
+                    if (!entityAdded) {
+                        for (Personnage p : personnages) {
+                            if (p.getPos().equals(point)) {
+                                button.setIcon(personnageIcon); // Image pour un personnage
+                                button.addActionListener(e -> afficherInfo(p));
+                                entityAdded = true;
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (!entityAdded) {
-                    for (Monstre m : monstres) {
-                        if (m.getPos().equals(point)) {
-                            button.setIcon(monstreIcon); // Image pour un monstre
-                            button.addActionListener(e -> afficherInfo(m));
-                            entityAdded = true;
-                            break;
+                    if (!entityAdded) {
+                        for (Monstre m : monstres) {
+                            if (m.getPos().equals(point) && (m instanceof Lapin)) {
+                                button.setIcon(lapinIcon); // Image pour un monstre
+                                button.addActionListener(e -> afficherInfo(m));
+                                entityAdded = true;
+                                break;
+                            }
+                            if (m.getPos().equals(point) && (m instanceof Loup)) {
+                                button.setIcon(loupIcon); // Image pour un monstre
+                                button.addActionListener(e -> afficherInfo(m));
+                                entityAdded = true;
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (!entityAdded) {
-                    for (Objet o : objets) {
-                        if (o.getPos().equals(point)) {
-                            button.setIcon(objetIcon); // Image pour un objet
-                            button.addActionListener(e -> afficherInfo(o));
-                            entityAdded = true;
-                            break;
+                    if (!entityAdded) {
+                        for (Objet o : objets) {
+                            if (o.getPos().equals(point)) {
+                                if (o instanceof Epee){
+                                    button.setIcon(epeeIcon); // Image pour un objet
+                                }
+                                else if (o instanceof PotionSoin){
+                                    button.setIcon(potionIcon); // Image pour un objet
+                                }
+                                else if (o instanceof Nourriture){
+                                    button.setIcon(nourritureIcon); // Image pour un objet
+                                }
+                                else if (o instanceof NuageToxique){
+                                    button.setIcon(nuageIcon); // Image pour un objet
+                                }
+                                button.addActionListener(e -> afficherInfo(o));
+                                entityAdded = true;
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (!entityAdded) {
-                    button.setIcon(herbe); // Image pour une case vide
+                    if (!entityAdded) {
+                        button.setIcon(herbeIcon); // Image pour une case vide
+                    }
+                }
+                if (world.win()){
+                    button.setBackground(Color.YELLOW);
+                }
+                if (world.lose()){
+                    button.setBackground(Color.RED);
                 }
                 // Ajouter le bouton au panneau du monde
                 worldPanel.add(button);
@@ -248,8 +281,7 @@ public class WorldGUI extends JFrame {
      * @param entity L'entité dont on veut afficher les informations
      */
     private void afficherInfo(Object entity) {
-        
-    // Appeler la méthode affiche() de l'entité
+        // Appeler la méthode affiche() de l'entité
         if (entity instanceof Personnage personnage) {
             personnage.affiche();  // Afficher les informations du personnage
         } else if (entity instanceof Monstre monstre) {
@@ -263,10 +295,10 @@ public class WorldGUI extends JFrame {
         String info = baos.toString(); // Convertir le contenu capturé en chaîne
 
         // Afficher les informations dans le panneau d'information
-        infoPanel.append(info + "\n"); // Append to allow multiple info displays
+        infoPanel.append(info + "\n"); // Ajouter l'information au JTextArea
+
+        // Faire défiler automatiquement vers le bas
         JScrollBar verticalScrollBar = ((JScrollPane) infoPanel.getParent().getParent()).getVerticalScrollBar();
-        verticalScrollBar.setValue(verticalScrollBar.getMaximum()); // Scroll to bottom automatically
-
+        verticalScrollBar.setValue(verticalScrollBar.getMaximum()); // Scroll to bottom
     }
-
 }

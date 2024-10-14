@@ -48,7 +48,7 @@ public abstract class Monstre extends Creature {
      */
     @Override
     public void affiche() {
-        System.out.println("Point de vie = " + super.getPtVie());
+        System.out.println("\n Point de vie = " + super.getPtVie());
         System.out.println("Degat d'attaque = " + super.getDegAtt());
         System.out.println("Points de parade = " + super.getPtPar());
         System.out.println("Portée d'attaque = " + super.getPageAtt());

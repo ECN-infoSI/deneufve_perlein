@@ -116,7 +116,7 @@ public class Objet {
         }
     
     public void affiche() {
-        System.out.println("nom : " + nom) ;
+        System.out.println("\n nom : " + nom) ;
         System.out.println("Style de l'objet : " + style) ; 
         System.out.println("Poids = " + poids) ; 
         pos.affiche();

@@ -109,7 +109,7 @@ public abstract class Personnage extends Creature {
      */
     @Override
     public void affiche() {
-        System.out.println("nom: " + nom);
+        System.out.println("\n nom: " + nom);
         System.out.println("Point de vie = " + super.getPtVie());
         System.out.println("Dégât d'attaque = " + super.getDegAtt());
         System.out.println("Points de parade = " + super.getPtPar());

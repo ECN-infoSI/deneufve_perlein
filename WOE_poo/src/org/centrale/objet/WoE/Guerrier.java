@@ -64,11 +64,11 @@ public class Guerrier extends Personnage implements Combattant{
         super();
       
         Random random = new Random();
-        setPtVie(getPtVie()+20+random.nextInt(10));
-        setPagePar(getPagePar()+20+random.nextInt(10));
-        setPageAtt(getPageAtt()+20+random.nextInt(10));
-        setPtPar(getPtPar()+20+random.nextInt(10));
-        setDegAtt(getDegAtt()+20+random.nextInt(10));   //plus de dégats que Archer
+        setPtVie(40+random.nextInt(20));
+        setPagePar(40+random.nextInt(20));
+        setPageAtt(60+random.nextInt(10));
+        setPtPar(20+random.nextInt(10));
+        setDegAtt(40+random.nextInt(10));     
         this.e = new Epee();
     }    
 
@@ -112,6 +112,12 @@ public class Guerrier extends Personnage implements Combattant{
                         c.setPtVie(c.getPtVie()-super.getDegAtt());
                         System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie());
                     }
+                    else{
+                        System.out.println("Raté !");
+                    }
+                }
+                else{
+                        System.out.println("Raté !");
                 }
         }        
         else{

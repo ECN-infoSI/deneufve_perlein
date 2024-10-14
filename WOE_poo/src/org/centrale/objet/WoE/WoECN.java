@@ -19,8 +19,9 @@ public class WoECN {
         
         int nbTour = 1;
         while(true){
-            w.tourDeJeu(nbTour);
+            w.tourDeJeu(nbTour, gui);
             nbTour++;
+            SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
         }
     }
 }

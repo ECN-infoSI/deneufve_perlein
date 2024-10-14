@@ -63,11 +63,11 @@ public class Archer extends Personnage implements Combattant{
         super();
         
         Random random = new Random();
-        setPtVie(getPtVie()+20+random.nextInt(10));
-        setPagePar(getPagePar()+20+random.nextInt(10));
-        setPageAtt(getPageAtt()+50+random.nextInt(10));
-        setPtPar(getPtPar()+20+random.nextInt(10));
-        setDegAtt(getDegAtt()+10+random.nextInt(10));   
+        setPtVie(20+random.nextInt(10));
+        setPagePar(20+random.nextInt(20));
+        setPageAtt(40+random.nextInt(10));
+        setPtPar(5+random.nextInt(10));
+        setDegAtt(20+random.nextInt(10));   
         setDistAttMax(3);   
         this.nbFleches = 5;
     }  
@@ -111,6 +111,12 @@ public class Archer extends Personnage implements Combattant{
                         c.setPtVie(c.getPtVie()-super.getDegAtt());
                         System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie());
                     }
+                    else{
+                        System.out.println("Raté !");
+                    }
+                }
+                else{
+                        System.out.println("Raté !");
                 }
             }
             else{
@@ -121,6 +127,9 @@ public class Archer extends Personnage implements Combattant{
                     if(tirageAtt<=super.getPageAtt()){
                         c.setPtVie(c.getPtVie()-super.getDegAtt()); //à distance, le def subit directement les dégats 
                         System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie());
+                    }
+                    else{
+                        System.out.println("Raté !");
                     }
                 }
             }
