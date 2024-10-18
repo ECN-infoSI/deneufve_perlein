@@ -36,14 +36,13 @@ public class WoECN {
         // Interface graphique
         WorldGUI gui = new WorldGUI(w);
         gui.setVisible(true);
-        System.out.println("Voici les capacité de votre personnage:");
+        System.out.println("Voici les capacités de votre personnage:");
         w.getJoueur().getPersoChoisi().affiche();
         int nbTour = 1;     //à changer si le jeu est chargé
         while(true){
             w.tourDeJeu(nbTour, gui);
             nbTour++;
             SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
-            w.save("test.txt");
         }
     }
 }

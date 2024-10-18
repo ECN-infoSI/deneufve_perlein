@@ -1,0 +1,19 @@
+Taille;20
+Archer;Witch;-19;24;14;43;32;3;8;4;4
+Paysan;Ness;10;0;5;0;20;1;17;2
+Paysan;Claire;10;0;5;0;20;1;3;2
+Guerrier;Boomer;48;48;21;69;42;1;9;13
+Guerrier;Brigitte;41;44;20;67;55;1;12;19
+Guerrier;Barry;48;40;29;69;40;1;0;17
+Loup;8;47;22;43;21;8;5
+Lapin;10;0;5;0;20;18;3
+PotionSoin;PotionSoin;Pas bien;1;6;1;10
+Epee;frappe du quartier;Pas bien;1;10;18;10
+Epee;frappe du quartier;Pas bien;1;15;17;10
+Epee;frappe du quartier;Pas bien;1;16;19;10
+ChickenStreet;ChickenStreet;Pas bien;1;19;12;2;1
+PouletMadras;PouletMadras;Pas bien;1;16;17;2;1
+PouletMadras;PouletMadras;Pas bien;1;4;19;2;1
+PouletMadras;PouletMadras;Pas bien;1;10;19;2;1
+NuageToxique;NuageToxique;Pas bien;1;8;8;10;3
+Joueur;Guerrier;1;63;67;23;83;52;1;1;1

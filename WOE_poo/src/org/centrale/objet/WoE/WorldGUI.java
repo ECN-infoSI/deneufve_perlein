@@ -40,11 +40,12 @@ public class WorldGUI extends JFrame {
         setTitle("World of ECN 1.25");
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
-        setSize(screenSize.width, screenSize.height - 40);
+        setSize(screenSize.width - 400, screenSize.height - 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // Création du panneau de la carte du monde
         worldPanel = new JPanel();
+        
         worldPanel.setLayout(new GridLayout(world.getTaille(), world.getTaille(), 1, 1));
         worldPanel.setFocusable(true); // Rendre le panneau focalisable
         
@@ -88,7 +89,7 @@ public class WorldGUI extends JFrame {
         
         // Ajouter les éléments à la fenêtre
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, worldPanel, new JScrollPane(infoPanel));
-        splitPane.setDividerLocation(1500);
+        splitPane.setDividerLocation(1000);
         getContentPane().add(splitPane, BorderLayout.CENTER);
 
         // Bouton pour afficher le monde
@@ -193,23 +194,23 @@ public class WorldGUI extends JFrame {
         LinkedList<Objet> objets = world.getObjets();
 
         // Charger les images avec redimensionnement
-        ImageIcon joueurIcon = new ImageIcon(new ImageIcon("./resources/joueur.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon personnageIcon = new ImageIcon(new ImageIcon("./resources/personnage.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon potionIcon = new ImageIcon(new ImageIcon("./resources/potion.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon herbeIcon = new ImageIcon(new ImageIcon("./resources/herbe.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon epeeIcon = new ImageIcon(new ImageIcon("./resources/epee.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon loupIcon = new ImageIcon(new ImageIcon("./resources/loup.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon lapinIcon = new ImageIcon(new ImageIcon("./resources/lapin.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon nourritureIcon = new ImageIcon(new ImageIcon("./resources/nourriture.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon nuageIcon = new ImageIcon(new ImageIcon("./resources/nuage.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon joueurIcon = new ImageIcon(new ImageIcon("./resources/joueur.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        ImageIcon personnageIcon = new ImageIcon(new ImageIcon("./resources/personnage.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        ImageIcon potionIcon = new ImageIcon(new ImageIcon("./resources/potion.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        ImageIcon herbeIcon = new ImageIcon(new ImageIcon("./resources/herbe.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        ImageIcon epeeIcon = new ImageIcon(new ImageIcon("./resources/epee.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        ImageIcon loupIcon = new ImageIcon(new ImageIcon("./resources/loup.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        ImageIcon lapinIcon = new ImageIcon(new ImageIcon("./resources/lapin.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        ImageIcon nourritureIcon = new ImageIcon(new ImageIcon("./resources/nourriture.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        ImageIcon nuageIcon = new ImageIcon(new ImageIcon("./resources/nuage.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 
     // Créer des boutons pour représenter chaque case de la grille
         for (int i = 0; i < world.getTaille(); i++) {
             for (int j = 0; j < world.getTaille(); j++) {
                 JButton button = new JButton();
-                button.setPreferredSize(new Dimension(100, 100)); // Taille préférée pour le bouton
-                button.setMinimumSize(new Dimension(100, 100)); // Taille minimale
-                button.setMaximumSize(new Dimension(100, 100)); // Taille maximale
+                button.setPreferredSize(new Dimension(50, 50)); // Taille préférée pour le bouton
+                button.setMinimumSize(new Dimension(50, 50)); // Taille minimale
+                button.setMaximumSize(new Dimension(50, 50)); // Taille maximale
 
                 Point2D point = new Point2D(i, j);
                 
@@ -301,11 +302,14 @@ public class WorldGUI extends JFrame {
      */
     private void afficherInfo(Object entity) {
         // Appeler la méthode affiche() de l'entité
-        if (entity instanceof Personnage personnage) {
+        if (entity instanceof Personnage ) {
+            Personnage personnage = (Personnage) entity;
             personnage.affiche();  // Afficher les informations du personnage
-        } else if (entity instanceof Monstre monstre) {
+        } else if (entity instanceof Monstre) {
+            Monstre monstre = (Monstre) entity;
             monstre.affiche(); // Afficher les informations du monstre
-        } else if (entity instanceof Objet objet) {
+        } else if (entity instanceof Objet) {
+            Objet objet = (Objet) entity;
             objet.affiche(); // Afficher les informations de l'objet
         }
 

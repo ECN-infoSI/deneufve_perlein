@@ -1,0 +1,12 @@
+Taille;20
+Guerrier;Atreus;53;49;20;62;57;1;13;14
+Loup;21;41;21;44;11;1;19
+Loup;39;49;24;42;20;9;1
+Lapin;10;0;5;0;20;3;8
+Epee;frappe du quartier;Pas bien;1;6;1;10
+Epee;frappe du quartier;Pas bien;1;13;6;10
+ChickenStreet;ChickenStreet;Pas bien;1;14;13;2;1
+ChickenStreet;ChickenStreet;Pas bien;1;6;10;2;1
+ChickenStreet;ChickenStreet;Pas bien;1;6;12;2;1
+NuageToxique;NuageToxique;Pas bien;1;4;2;10;3
+Joueur;Guerrier;1;78;60;29;86;50;1;4;3

@@ -65,11 +65,11 @@ public class World{
             String ligne;
             BufferedReader fichier = new BufferedReader(new FileReader(source));
 
-            LinkedList<Monstre> monstres = new LinkedList<>(); 
-            LinkedList<Personnage> personnages = new LinkedList<>(); 
-            LinkedList<Objet> objets = new LinkedList<>(); 
+            monstres = new LinkedList<>(); 
+            personnages = new LinkedList<>(); 
+            objets = new LinkedList<>(); 
 
-            Joueur readJoueur = new Joueur(); 
+            joueur = new Joueur(); 
             ArrayList<Objet> inventaire = new ArrayList<>();
             ArrayList<Objet> effets = new ArrayList<>();
             
@@ -77,9 +77,10 @@ public class World{
             
             // Lecture de la première ligne
             ligne = fichier.readLine();
-
+             
             // Parcours de chaque ligne du fichier
             while (ligne != null) {
+                System.out.println(ligne);
                 // Séparation des éléments de la ligne
                 String[] tokens = ligne.split(";");
 
@@ -198,7 +199,7 @@ public class World{
                             break;
 
                         case "Joueur" :
-                            String type_joueur = tokens[0] ; 
+                            String type_joueur = tokens[1] ; 
                             switch (type_joueur) {
                                 case "Archer" : 
                                     Archer perso_a = new Archer(tokens[2], 
@@ -210,7 +211,7 @@ public class World{
                                                        Integer.parseInt(tokens[8]),
                                                        new Point2D(Integer.parseInt(tokens[9]), Integer.parseInt(tokens[10])),
                                                        Integer.parseInt(tokens[11]));
-                                    readJoueur.setPersoChoisi((Personnage) perso_a);
+                                    joueur.setPersoChoisi((Personnage) perso_a);
                                     break;
                                 case "Guerrier" : 
                                     Guerrier perso_g = new Guerrier(tokens[2], 
@@ -221,7 +222,7 @@ public class World{
                                                        Integer.parseInt(tokens[7]),
                                                        Integer.parseInt(tokens[8]),
                                                        new Point2D(Integer.parseInt(tokens[9]), Integer.parseInt(tokens[10])));
-                                    readJoueur.setPersoChoisi((Personnage) perso_g);
+                                    joueur.setPersoChoisi((Personnage) perso_g);
                                     break;    
                             }    
 
@@ -341,17 +342,13 @@ public class World{
 
             fichier.close();
 
-            readJoueur.setInventaire(inventaire) ; 
-            readJoueur.setEffets(effets) ; 
+            joueur.setInventaire(inventaire) ; 
+            joueur.setEffets(effets) ; 
 
 
             //création du monde : attention personnage classe abstraite
             //voir comment on peut définir le joueur
-            this.personnages = personnages;
-            this.monstres = monstres;
-            this.objets = objets;
-            this.taille = readTaille;
-            this.joueur = readJoueur; 
+            this.taille = readTaille; 
             command = "";
             
         } catch (Exception e) {
@@ -460,6 +457,12 @@ public class World{
                 joueur.setPersoChoisi(new Archer()); 
                 break;
         }
+        
+        scanner.nextLine();  // Consomme le retour à la ligne résiduel
+        System.out.println("Choisissez un nom à votre personnage");
+        String nom = scanner.nextLine();
+        joueur.getPersoChoisi().setNom(nom);
+        
         Personnage heros = getJoueur().getPersoChoisi();
         heros.setPtVie(heros.getPtVie()+20);
         heros.setDegAtt(heros.getDegAtt()+20);
