@@ -58,7 +58,7 @@ public abstract class Personnage extends Creature {
         super();
         try {
             // Charger noms depuis les fichiers texte
-            List<String> noms = loadNamesFromFile("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/noms.txt");
+            List<String> noms = loadNamesFromFile("./resources/noms.txt");
             // Générer et afficher un nom
             Random random = new Random();
             nom = noms.get(random.nextInt(noms.size()));
@@ -113,8 +113,8 @@ public abstract class Personnage extends Creature {
         System.out.println("Point de vie = " + super.getPtVie());
         System.out.println("Dégât d'attaque = " + super.getDegAtt());
         System.out.println("Points de parade = " + super.getPtPar());
-        System.out.println("Portée d'attaque = " + super.getPageAtt());
-        System.out.println("Portée de parade = " + super.getPagePar());
+        System.out.println("Pourcentage d'attaque = " + super.getPageAtt());
+        System.out.println("Pourcentage de parade = " + super.getPagePar());
         System.out.println("Distance d'attaque maximale = " + distAttMax);
         super.getPos().affiche();
     }

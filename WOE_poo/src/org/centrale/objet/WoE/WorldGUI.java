@@ -63,6 +63,7 @@ public class WorldGUI extends JFrame {
 
         // Champ de texte pour l'entrée de l'utilisateur
         inputField = new JTextField();
+        inputField.setLayout(new BorderLayout());
         inputField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -84,7 +85,6 @@ public class WorldGUI extends JFrame {
             }
         });
 
-
         
         // Ajouter les éléments à la fenêtre
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, worldPanel, new JScrollPane(infoPanel));
@@ -100,6 +100,25 @@ public class WorldGUI extends JFrame {
         getContentPane().add(displayButton, BorderLayout.NORTH);
         getContentPane().add(inputField, BorderLayout.SOUTH); // Ajouter le champ de texte en bas
 
+        // Ajouter le bouton de sauvegarde
+        JButton saveButton = new JButton("Sauvegarder la partie");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nomSauvegarde = JOptionPane.showInputDialog("Entrez le nom de la sauvegarde (avec .txt) :");
+                if (nomSauvegarde != null && !nomSauvegarde.trim().isEmpty()) {
+                    world.save(nomSauvegarde); // Appeler la méthode save
+                    infoPanel.append("Sauvegarde effectuée dans " + nomSauvegarde + "\n");
+                } else {
+                    infoPanel.append("Nom de sauvegarde invalide.\n");
+                }
+            }
+        });
+        // Ajouter le bouton de sauvegarde au panneau
+        inputField.add(saveButton, BorderLayout.EAST); // Ajouter le bouton à l'est du panneau
+
+        // Ajouter le panneau d'entrée au bas de la fenêtre
+        getContentPane().add(inputField, BorderLayout.SOUTH);
         setVisible(true);
         worldPanel.requestFocusInWindow(); // Demander le focus au panneau à l'initialisation
         
@@ -174,15 +193,15 @@ public class WorldGUI extends JFrame {
         LinkedList<Objet> objets = world.getObjets();
 
         // Charger les images avec redimensionnement
-        ImageIcon joueurIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/joueur.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon personnageIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/personnage.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon potionIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/potion.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon herbeIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/herbe.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon epeeIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/epee.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon loupIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/loup.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon lapinIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/lapin.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon nourritureIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/nourriture.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        ImageIcon nuageIcon = new ImageIcon(new ImageIcon("C:/Users/benja/Documents/01_InfoSI/OBJET/deneufve_perlein/WOE_poo/nuage.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon joueurIcon = new ImageIcon(new ImageIcon("./resources/joueur.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon personnageIcon = new ImageIcon(new ImageIcon("./resources/personnage.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon potionIcon = new ImageIcon(new ImageIcon("./resources/potion.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon herbeIcon = new ImageIcon(new ImageIcon("./resources/herbe.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon epeeIcon = new ImageIcon(new ImageIcon("./resources/epee.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon loupIcon = new ImageIcon(new ImageIcon("./resources/loup.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon lapinIcon = new ImageIcon(new ImageIcon("./resources/lapin.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon nourritureIcon = new ImageIcon(new ImageIcon("./resources/nourriture.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        ImageIcon nuageIcon = new ImageIcon(new ImageIcon("./resources/nuage.png").getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
 
     // Créer des boutons pour représenter chaque case de la grille
         for (int i = 0; i < world.getTaille(); i++) {

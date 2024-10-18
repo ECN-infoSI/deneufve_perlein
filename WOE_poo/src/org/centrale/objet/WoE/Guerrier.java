@@ -16,7 +16,6 @@ public class Guerrier extends Personnage implements Combattant{
     /**
      * Épée utilisée par le guerrier.
      */
-    private Epee e;
 
     /**
      * Constructeur avec paramètres.
@@ -31,9 +30,8 @@ public class Guerrier extends Personnage implements Combattant{
      * @param p Position.
      * @param e Épée du guerrier.
      */
-    public Guerrier(String n, int pv, int da, int ppar, int paatt, int papar, int dmax, Point2D p, Epee e) {
+    public Guerrier(String n, int pv, int da, int ppar, int paatt, int papar, int dmax, Point2D p) {
         super(n, pv, da, ppar, paatt, papar, dmax, p);
-        this.e = e;
     }
 
     /**
@@ -42,9 +40,8 @@ public class Guerrier extends Personnage implements Combattant{
      * @param p2 Personnage à copier.
      * @param e Épée à associer au guerrier.
      */
-    public Guerrier(Personnage p2, Epee e) {
+    public Guerrier(Personnage p2) {
         super(p2);
-        this.e = e;
     }
     
     /**
@@ -53,8 +50,7 @@ public class Guerrier extends Personnage implements Combattant{
      * @param p2 Guerrier à copier.
      */
     public Guerrier(Guerrier p2) {
-        super((Personnage)p2);
-        this.e = p2.e;      
+        super((Personnage)p2); 
     }
 
     /**
@@ -69,26 +65,8 @@ public class Guerrier extends Personnage implements Combattant{
         setPageAtt(60+random.nextInt(10));
         setPtPar(20+random.nextInt(10));
         setDegAtt(40+random.nextInt(10));     
-        this.e = new Epee();
     }    
 
-    /**
-     * Définit l'épée du guerrier.
-     * 
-     * @param e Épée à définir.
-     */
-    public void setE(Epee e) {
-        this.e = e;
-    }
-
-    /**
-     * Retourne l'épée du guerrier.
-     * 
-     * @return Épée du guerrier.
-     */
-    public Epee getE() {
-        return e;
-    }
 
     /**
      * Méthode permettant au guerrier de combattre une créature.
@@ -110,14 +88,14 @@ public class Guerrier extends Personnage implements Combattant{
                     int tirageDef = rand.nextInt(100);    
                     if(tirageDef<=c.getPagePar()){
                         c.setPtVie(c.getPtVie()-super.getDegAtt());
-                        System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie());
+                        System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie()+"\n");
                     }
                     else{
-                        System.out.println("Raté !");
+                        System.out.println("Raté ! \n");
                     }
                 }
                 else{
-                        System.out.println("Raté !");
+                        System.out.println("Raté ! \n");
                 }
         }        
         else{

@@ -104,19 +104,20 @@ public class Archer extends Personnage implements Combattant{
         if(dist<=super.getDistAttMax()){
             if(dist==1){
                 int tirageAtt = rand.nextInt(100);
-                System.out.println(" _"+"\n"+"|"+tirageAtt+"|");
+                System.out.println("Tirage d'attaque \n"+"  _"+"\n"+"|"+tirageAtt+"|");
                 if(tirageAtt<=super.getPageAtt()){
-                    int tirageDef = rand.nextInt(100);    
+                    int tirageDef = rand.nextInt(100);
+                    System.out.println("Tirage de parade \n"+" _"+"\n"+"|"+tirageDef+"|");
                     if(tirageDef<=c.getPagePar()){
                         c.setPtVie(c.getPtVie()-super.getDegAtt());
-                        System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie());
+                        System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie()+"\n");
                     }
                     else{
-                        System.out.println("Raté !");
+                        System.out.println("Le défenseur s'est protégé ! \n");
                     }
                 }
                 else{
-                        System.out.println("Raté !");
+                        System.out.println("Raté ! \n");
                 }
             }
             else{
@@ -126,10 +127,10 @@ public class Archer extends Personnage implements Combattant{
                     System.out.println(" _"+"\n"+"|"+tirageAtt+"|");
                     if(tirageAtt<=super.getPageAtt()){
                         c.setPtVie(c.getPtVie()-super.getDegAtt()); //à distance, le def subit directement les dégats 
-                        System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie());
+                        System.out.println("Touché ! Le défenseur n'a plus que " + c.getPtVie()+ "\n");
                     }
                     else{
-                        System.out.println("Raté !");
+                        System.out.println("Vous n'azez plus de flèches ! \n");
                     }
                 }
             }

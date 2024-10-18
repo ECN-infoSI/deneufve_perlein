@@ -28,7 +28,7 @@ public class WoECN {
                 scanner.nextLine();  // Consomme le retour à la ligne résiduel
                 System.out.println("Entrez le nom du fichier de votre sauvegarde (exemple: test.txt)");
                 String nom = scanner.nextLine();
-                World wR = new World(nom);
+                World wR = new World("./"+nom);
                 w = wR;
                 break;
         }
@@ -36,13 +36,13 @@ public class WoECN {
         // Interface graphique
         WorldGUI gui = new WorldGUI(w);
         gui.setVisible(true);
-        
+        System.out.println("Voici les capacité de votre personnage:");
+        w.getJoueur().getPersoChoisi().affiche();
         int nbTour = 1;     //à changer si le jeu est chargé
         while(true){
             w.tourDeJeu(nbTour, gui);
             nbTour++;
             SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
-            System.out.println("Voulez vous charger (tapez c) ou sauvegarder (tapez s) votre partie ?");
             w.save("test.txt");
         }
     }

@@ -3,6 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random ;
 import java.util.Scanner;
@@ -25,7 +31,11 @@ public class World{
     private int taille ;
     private String command;
 
-
+    /**
+    * Constructeur complet
+    *
+    * @author benja
+    */
     public World(LinkedList<Personnage> personnages, LinkedList<Monstre> monstres, LinkedList<Objet> objets, int taille, Joueur J) {
         this.personnages = personnages;  
         this.monstres = monstres;        
@@ -37,7 +47,7 @@ public class World{
 
     /**
      * Constructeur par défaut, crée un monde avec des entités par défaut, crée un personnage controlé par le joueur
-     * avec une taille de 50.
+     * avec une taille de 20.
      */
     public World() {
         this.taille = 20;
@@ -49,6 +59,307 @@ public class World{
         command = "";
     }
 
+    
+    public World(String source) {
+        try {
+            String ligne;
+            BufferedReader fichier = new BufferedReader(new FileReader(source));
+
+            LinkedList<Monstre> monstres = new LinkedList<>(); 
+            LinkedList<Personnage> personnages = new LinkedList<>(); 
+            LinkedList<Objet> objets = new LinkedList<>(); 
+
+            Joueur readJoueur = new Joueur(); 
+            ArrayList<Objet> inventaire = new ArrayList<>();
+            ArrayList<Objet> effets = new ArrayList<>();
+            
+            int readTaille = 20;
+            
+            // Lecture de la première ligne
+            ligne = fichier.readLine();
+
+            // Parcours de chaque ligne du fichier
+            while (ligne != null) {
+                // Séparation des éléments de la ligne
+                String[] tokens = ligne.split(";");
+
+                // Si la ligne contient "Taille", on crée le monde
+                if (tokens[0].equals("Taille")) {
+                    readTaille = Integer.parseInt(tokens[1]);
+                } else {
+                    // Si on est ici, cela signifie qu'on lit une entité
+                    String typeEntite = tokens[0];
+
+                    switch (typeEntite) {
+                        case "Guerrier":
+                            
+                            Guerrier guerrier = new Guerrier(tokens[1], 
+                                                             Integer.parseInt(tokens[2]),
+                                                             Integer.parseInt(tokens[3]),
+                                                             Integer.parseInt(tokens[4]),
+                                                             Integer.parseInt(tokens[5]),
+                                                             Integer.parseInt(tokens[6]),
+                                                             Integer.parseInt(tokens[7]),
+                                                             new Point2D(Integer.parseInt(tokens[8]), Integer.parseInt(tokens[9])));
+                            personnages.add(guerrier) ;
+                            break;
+
+                        case "Archer":
+                            Archer archer = new Archer(tokens[1], 
+                                                       Integer.parseInt(tokens[2]),
+                                                       Integer.parseInt(tokens[3]),
+                                                       Integer.parseInt(tokens[4]),
+                                                       Integer.parseInt(tokens[5]),
+                                                       Integer.parseInt(tokens[6]),
+                                                       Integer.parseInt(tokens[7]),
+                                                       new Point2D(Integer.parseInt(tokens[8]), Integer.parseInt(tokens[9])),
+                                                       Integer.parseInt(tokens[10]));
+                            personnages.add(archer);
+                            break;
+
+                        case "Paysan":
+                            Paysan paysan = new Paysan(tokens[1], 
+                                                       Integer.parseInt(tokens[2]),
+                                                       Integer.parseInt(tokens[3]),
+                                                       Integer.parseInt(tokens[4]),
+                                                       Integer.parseInt(tokens[5]),
+                                                       Integer.parseInt(tokens[6]),
+                                                       Integer.parseInt(tokens[7]),
+                                                       new Point2D(Integer.parseInt(tokens[8]), Integer.parseInt(tokens[9])));
+                            personnages.add(paysan);
+                            break;
+
+                        case "Loup":
+                            Loup loup = new Loup(Integer.parseInt(tokens[1]),
+                                                 Integer.parseInt(tokens[2]),
+                                                 Integer.parseInt(tokens[3]),
+                                                 Integer.parseInt(tokens[4]),
+                                                 Integer.parseInt(tokens[5]),
+                                                 new Point2D(Integer.parseInt(tokens[6]), Integer.parseInt(tokens[7])));
+                            monstres.add(loup);
+                            break;
+
+                        case "Lapin":
+                            Lapin lapin = new Lapin(Integer.parseInt(tokens[1]),
+                                                    Integer.parseInt(tokens[2]),
+                                                    Integer.parseInt(tokens[3]),
+                                                    Integer.parseInt(tokens[4]),
+                                                    Integer.parseInt(tokens[5]),
+                                                    new Point2D(Integer.parseInt(tokens[6]), Integer.parseInt(tokens[7])));
+                            monstres.add(lapin);
+                            break;
+
+                        case "Epee":
+                            Epee epee = new Epee(tokens[1],
+                                                    tokens[2],
+                                                    Integer.parseInt(tokens[3]),
+                                                    new Point2D(Integer.parseInt(tokens[4]), Integer.parseInt(tokens[5])),
+                                                    Integer.parseInt(tokens[6]));
+                            objets.add(epee);
+                            break;
+
+                        case "PotionSoin":
+                            PotionSoin pot = new PotionSoin(tokens[1],
+                                                    tokens[2],
+                                                    Integer.parseInt(tokens[3]),
+                                                    new Point2D(Integer.parseInt(tokens[4]), Integer.parseInt(tokens[5])),
+                                                    Integer.parseInt(tokens[6]));
+                            objets.add(pot);
+                            break;
+
+                        case "NuageToxique":
+                            NuageToxique nu = new NuageToxique(tokens[1],
+                                                    tokens[2],
+                                                    Integer.parseInt(tokens[3]),
+                                                    new Point2D(Integer.parseInt(tokens[4]), Integer.parseInt(tokens[5])),
+                                                    Integer.parseInt(tokens[6]),
+                                                    Integer.parseInt(tokens[7]));
+                            objets.add(nu);
+                            break;
+
+                        case "ChickenStreet":
+                            ChickenStreet cs = new ChickenStreet(tokens[1],
+                                                    tokens[2],
+                                                    Integer.parseInt(tokens[3]),
+                                                    new Point2D(Integer.parseInt(tokens[4]), Integer.parseInt(tokens[5])),
+                                                    Integer.parseInt(tokens[6]),
+                                                    Integer.parseInt(tokens[7]));
+                            objets.add(cs);
+                            break;
+
+                        case "PouletMadras":
+                            PouletMadras pm = new PouletMadras(tokens[1],
+                                                    tokens[2],
+                                                    Integer.parseInt(tokens[3]),
+                                                    new Point2D(Integer.parseInt(tokens[4]), Integer.parseInt(tokens[5])),
+                                                    Integer.parseInt(tokens[6]),
+                                                    Integer.parseInt(tokens[7]));
+                            objets.add(pm);
+                            break;
+
+                        case "Joueur" :
+                            String type_joueur = tokens[0] ; 
+                            switch (type_joueur) {
+                                case "Archer" : 
+                                    Archer perso_a = new Archer(tokens[2], 
+                                                       Integer.parseInt(tokens[3]),
+                                                       Integer.parseInt(tokens[4]),
+                                                       Integer.parseInt(tokens[5]),
+                                                       Integer.parseInt(tokens[6]),
+                                                       Integer.parseInt(tokens[7]),
+                                                       Integer.parseInt(tokens[8]),
+                                                       new Point2D(Integer.parseInt(tokens[9]), Integer.parseInt(tokens[10])),
+                                                       Integer.parseInt(tokens[11]));
+                                    readJoueur.setPersoChoisi((Personnage) perso_a);
+                                    break;
+                                case "Guerrier" : 
+                                    Guerrier perso_g = new Guerrier(tokens[2], 
+                                                       Integer.parseInt(tokens[3]),
+                                                       Integer.parseInt(tokens[4]),
+                                                       Integer.parseInt(tokens[5]),
+                                                       Integer.parseInt(tokens[6]),
+                                                       Integer.parseInt(tokens[7]),
+                                                       Integer.parseInt(tokens[8]),
+                                                       new Point2D(Integer.parseInt(tokens[9]), Integer.parseInt(tokens[10])));
+                                    readJoueur.setPersoChoisi((Personnage) perso_g);
+                                    break;    
+                            }    
+
+                        case "Inventaire" : 
+                            String type_inv = tokens[1] ; 
+                            switch (type_inv) {
+                                case "Epee":
+                                Epee epee1 = new Epee(tokens[2],
+                                                    tokens[3],
+                                                    Integer.parseInt(tokens[4]),
+                                                    new Point2D(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6])),
+                                                    Integer.parseInt(tokens[7]));
+                                inventaire.add(epee1);
+                                break;
+
+                            case "PotionSoin":
+                                PotionSoin pot1 = new PotionSoin(tokens[2],
+                                                        tokens[3],
+                                                        Integer.parseInt(tokens[4]),
+                                                        new Point2D(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6])),
+                                                        Integer.parseInt(tokens[7]));
+                                inventaire.add(pot1);
+                                break;
+
+                            case "NuageToxique":
+                                NuageToxique nu1 = new NuageToxique(tokens[2],
+                                                        tokens[3],
+                                                        Integer.parseInt(tokens[4]),
+                                                        new Point2D(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6])),
+                                                        Integer.parseInt(tokens[7]),
+                                                        Integer.parseInt(tokens[8]));
+                                inventaire.add(nu1);
+                                break;
+
+                            case "ChickenStreet":
+                                ChickenStreet cs1 = new ChickenStreet(tokens[2],
+                                                        tokens[3],
+                                                        Integer.parseInt(tokens[4]),
+                                                        new Point2D(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6])),
+                                                        Integer.parseInt(tokens[7]),
+                                                        Integer.parseInt(tokens[8]));
+                                inventaire.add(cs1);
+                                break;
+
+                            case "PouletMadras":
+                                PouletMadras pm1 = new PouletMadras(tokens[2],
+                                                        tokens[3],
+                                                        Integer.parseInt(tokens[4]),
+                                                        new Point2D(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6])),
+                                                        Integer.parseInt(tokens[7]),
+                                                        Integer.parseInt(tokens[8]));
+                                inventaire.add(pm1);
+                                break;
+                                }
+
+                        case "Effets" : 
+                            String type_eff = tokens[1] ; 
+                            switch (type_eff) {
+                                case "Epee":
+                                Epee epee2 = new Epee(tokens[2],
+                                                    tokens[3],
+                                                    Integer.parseInt(tokens[4]),
+                                                    new Point2D(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6])),
+                                                    Integer.parseInt(tokens[7]));
+                                effets.add(epee2);
+                                break;
+
+                            case "PotionSoin":
+                                PotionSoin pot2 = new PotionSoin(tokens[2],
+                                                        tokens[3],
+                                                        Integer.parseInt(tokens[4]),
+                                                        new Point2D(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6])),
+                                                        Integer.parseInt(tokens[7]));
+                                effets.add(pot2);
+                                break;
+
+                            case "NuageToxique":
+                                NuageToxique nu2 = new NuageToxique(tokens[2],
+                                                        tokens[3],
+                                                        Integer.parseInt(tokens[4]),
+                                                        new Point2D(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6])),
+                                                        Integer.parseInt(tokens[7]),
+                                                        Integer.parseInt(tokens[8]));
+                                effets.add(nu2);
+                                break;
+
+                            case "ChickenStreet":
+                                ChickenStreet cs2 = new ChickenStreet(tokens[2],
+                                                        tokens[3],
+                                                        Integer.parseInt(tokens[4]),
+                                                        new Point2D(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6])),
+                                                        Integer.parseInt(tokens[7]),
+                                                        Integer.parseInt(tokens[8]));
+                                effets.add(cs2);
+                                break;
+
+                            case "PouletMadras":
+                                PouletMadras pm2 = new PouletMadras(tokens[2],
+                                                        tokens[3],
+                                                        Integer.parseInt(tokens[4]),
+                                                        new Point2D(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6])),
+                                                        Integer.parseInt(tokens[7]),
+                                                        Integer.parseInt(tokens[8]));
+                                effets.add(pm2);
+                                break;
+                            }
+
+                        default:
+                            break;
+
+                    }
+                }
+
+                // Lecture de la ligne suivante
+                ligne = fichier.readLine();
+            }
+
+            fichier.close();
+
+            readJoueur.setInventaire(inventaire) ; 
+            readJoueur.setEffets(effets) ; 
+
+
+            //création du monde : attention personnage classe abstraite
+            //voir comment on peut définir le joueur
+            this.personnages = personnages;
+            this.monstres = monstres;
+            this.objets = objets;
+            this.taille = readTaille;
+            this.joueur = readJoueur; 
+            command = "";
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            new World();
+        }
+    }
+    
     /**
      * @return la liste des personnages du monde
      */
@@ -96,7 +407,7 @@ public class World{
     /**
      * Définit le personnage contrôlé par le joueur
      * 
-     * @param persoJoueur 
+     * @param readJoueur 
      */
     public void setPersoJoueur(Joueur J) {
         this.joueur = J;
@@ -137,7 +448,7 @@ public class World{
     
     public final Joueur creationJoueur(Point2D positionInit){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Choisissez la classe de votre personnage parmi: 1.Guerrier - 2.Archer");
+        System.out.println("Pour lancer une nouvelle partie, choisissez la classe de votre personnage parmi: 1.Guerrier - 2.Archer");
         int choix = scanner.nextInt();
         joueur = new Joueur();
         
@@ -149,6 +460,10 @@ public class World{
                 joueur.setPersoChoisi(new Archer()); 
                 break;
         }
+        Personnage heros = getJoueur().getPersoChoisi();
+        heros.setPtVie(heros.getPtVie()+20);
+        heros.setDegAtt(heros.getDegAtt()+20);
+        heros.setPageAtt(heros.getPageAtt()+20);
         getJoueur().getPersoChoisi().setPos(positionInit);   //Position de départ
         return joueur;
     } 
@@ -377,7 +692,7 @@ public class World{
                     // Vérifier que l'entrée est valide
                     if (choixCombat >= 0 && choixCombat < creaturesAPortee.size()) {
                         Creature cible = creaturesAPortee.get(choixCombat);
-                        System.out.println("Vous allez combattre une créature ayant "+cible.getPtVie()+" points de vie, vous avez "+jpers.getPageAtt()+",pourcentage d'attaque et "+jpers.getDegAtt()+" points de dégats d'attaque");
+                        System.out.println("Vous allez combattre une créature ayant "+cible.getPtVie()+" points de vie, vous avez "+jpers.getPageAtt()+" pourcentage d'attaque et "+jpers.getDegAtt()+" points de dégats d'attaque");
                         jcomb.combattre(cible);
                         System.out.println("Il reste "+cible.getPtVie()+"points de vie à la créature");
                         selectionValide = true;  // Sortir de la boucle
@@ -558,5 +873,154 @@ public class World{
     public synchronized void processCommand(String s){
         command = s;    
         notify();
+    }
+        
+    public void save(String nom_fichier) {
+        BufferedWriter buff = null;
+
+        try {
+            // Initialisation du BufferedWriter avec le fichier
+            buff = new BufferedWriter(new FileWriter(nom_fichier));
+
+            // Appel à la méthode pour écrire dans le fichier
+            buff.write("Taille;" + taille);
+            buff.newLine();
+
+            // Le monde est carré
+            // buff.write("Hauteur " + taille);
+            // buff.newLine();
+
+            // Remplir le fichier en distinguant chaque instance
+            for (Personnage p : personnages) {
+                if (p instanceof Guerrier) {
+                    buff.write("Guerrier;" + p.getNom() + ";" + p.getPtVie() + ";" + p.getDegAtt() + ";" + p.getPtPar() + ";" 
+                    + p.getPageAtt() + ";" + p.getPagePar() + ";" + p.getDistAttMax() + ";" + p.getPos().getx() + ";" + p.getPos().gety());
+                    buff.newLine();
+                } else if (p instanceof Archer) {
+                    buff.write("Archer;" + p.getNom() + ";" + p.getPtVie() + ";" + p.getDegAtt() + ";" + p.getPtPar() + ";"
+                    + p.getPageAtt() + ";" + p.getPagePar() + ";" + p.getDistAttMax() + ";" + p.getPos().getx() + ";" + p.getPos().gety() 
+                    + ";" + ((Archer) p).getNbFleches());
+                    buff.newLine();
+                } else if (p instanceof Paysan) {
+                    buff.write("Paysan;" + p.getNom() + ";" + p.getPtVie() + ";" + p.getDegAtt() + ";" + p.getPtPar() + ";"
+                    + p.getPageAtt() + ";" + p.getPagePar() + ";" + p.getDistAttMax() + ";" + p.getPos().getx() + ";" + p.getPos().gety());
+                    buff.newLine();
+                }
+            }
+
+            for (Monstre m : monstres) {
+                if (m instanceof Lapin) {
+                    buff.write("Lapin;" + m.getPtVie() + ";" + m.getDegAtt() + ";" + m.getPtPar() + ";" 
+                    + m.getPageAtt() + ";" + m.getPagePar() + ";" +m.getPos().getx() + ";" + m.getPos().gety());
+                    buff.newLine();
+                } else if (m instanceof Loup) {
+                    buff.write("Loup;" + m.getPtVie() + ";" + m.getDegAtt() + ";" + m.getPtPar() + ";" 
+                    + m.getPageAtt() + ";"+ m.getPagePar() + ";" + m.getPos().getx() + ";" + m.getPos().gety());
+                    buff.newLine();
+                }
+            }
+
+            for (Objet o : objets) {
+                if (o instanceof Epee) {
+                    buff.write("Epee;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((Epee) o).getDegats());
+                    buff.newLine();
+                } else if (o instanceof PotionSoin) {
+                    buff.write("PotionSoin;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((PotionSoin) o).getSoin());
+                    buff.newLine();
+                } else if (o instanceof NuageToxique) {
+                    buff.write("NuageToxique;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((NuageToxique) o).getDegats() + ";" + ((NuageToxique) o).getRayon());
+                    buff.newLine();
+                } else if (o instanceof ChickenStreet) {
+                    buff.write("ChickenStreet;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((Nourriture) o).getTemps() + ";" + ((ChickenStreet) o).getPar());
+                    buff.newLine();
+                } else if (o instanceof PouletMadras) {
+                    buff.write("PouletMadras;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((Nourriture) o).getTemps() + ";" + ((PouletMadras) o).getDegats());
+                    buff.newLine();
+                }
+            }
+
+            // Distinction entre Archer et Guerrier pour le joueur
+            if (joueur.getPersoChoisi() instanceof Archer) {
+                Archer p = (Archer) joueur.getPersoChoisi();
+                buff.write("Joueur;Archer;" + p.getNom() + ";" + p.getPtVie() + ";" + p.getDegAtt() + ";" + p.getPtPar() + ";"
+                + p.getPageAtt() + ";" + p.getPagePar() + ";" + p.getDistAttMax() + ";" + p.getPos().getx() + ";" + p.getPos().gety() + ";" 
+                + ((Archer) p).getNbFleches());
+                buff.newLine();
+            } else if (joueur.getPersoChoisi() instanceof Guerrier) {
+                Guerrier p = (Guerrier) joueur.getPersoChoisi();
+                buff.write("Joueur;Guerrier;" + p.getNom() + ";" + p.getPtVie() + ";" + p.getDegAtt() + ";" + p.getPtPar() + ";"
+                + p.getPageAtt() + ";" + p.getPagePar() + ";" + p.getDistAttMax() + ";" + p.getPos().getx() + ";" + p.getPos().gety());
+                buff.newLine();
+            }
+
+            // Gestion de l'inventaire
+            for (Objet o : joueur.getInventaire()) {
+                if (o instanceof Epee) {
+                    buff.write("Inventaire;Epee;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((Epee) o).getDegats());
+                    buff.newLine();
+                } else if (o instanceof PotionSoin) {
+                    buff.write("Inventaire;PotionSoin;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((PotionSoin) o).getSoin());
+                    buff.newLine();
+                } else if (o instanceof NuageToxique) {
+                    buff.write("Inventaire NuageToxique;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((NuageToxique) o).getDegats() + ";" + ((NuageToxique) o).getRayon());
+                    buff.newLine();
+                } else if (o instanceof ChickenStreet) {
+                    buff.write("Inventaire;ChickenStreet;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((Nourriture) o).getTemps() + ";" + ((ChickenStreet) o).getPar());
+                    buff.newLine();
+                } else if (o instanceof PouletMadras) {
+                    buff.write("Inventaire;PouletMadras;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((Nourriture) o).getTemps() + ";" + ((PouletMadras) o).getDegats());
+                    buff.newLine();
+                }
+            }
+
+            // Gestion des effets
+            for (Objet o : joueur.getEffets()) {
+                if (o instanceof Epee) {
+                    buff.write("Effet;Epee;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((Epee) o).getDegats());
+                    buff.newLine();
+                } else if (o instanceof PotionSoin) {
+                    buff.write("Effet;PotionSoin;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((PotionSoin) o).getSoin());
+                    buff.newLine();
+                } else if (o instanceof NuageToxique) {
+                    buff.write("Effet;NuageToxique;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((NuageToxique) o).getDegats() + ";" + ((NuageToxique) o).getRayon());
+                    buff.newLine();
+                } else if (o instanceof ChickenStreet) {
+                    buff.write("Effet;ChickenStreet;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((Nourriture) o).getTemps() + ";" + ((ChickenStreet) o).getPar());
+                    buff.newLine();
+                } else if (o instanceof PouletMadras) {
+                    buff.write("Effet;PouletMadras;" + o.getNom() + ";" + o.getPoint_de_style() + ";" + o.getPoids() + ";" 
+                    + o.getPos().getx() + ";" + o.getPos().gety() + ";" + ((Nourriture) o).getTemps() + ";" + ((PouletMadras) o).getDegats());
+                    buff.newLine();
+                }
+            }
+
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (buff != null) {
+                    buff.flush(); // S'assurer que tout est bien écrit
+                    buff.close(); // Fermer correctement le fichier
+                }
+            } catch (IOException e) {
+                e.printStackTrace(); // Gérer les erreurs de fermeture
+            }
+        }
     }
 }
