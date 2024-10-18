@@ -3,6 +3,7 @@
  */
 
 package org.centrale.objet.WoE;
+import java.util.Scanner;
 import javax.swing.SwingUtilities;
 
 /**
@@ -11,17 +12,38 @@ import javax.swing.SwingUtilities;
  */
 public class WoECN {
     public static void main(String[] args) throws InterruptedException {
-        World w = new World();
+        
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Tapez 1. pour une nouvelle partie et 2. pour charger une partie");
+        
+        int choix = scanner.nextInt();
+        World w = null;
+        
+        switch(choix){
+            case 1: 
+                World wAlea = new World();
+                w = wAlea;
+                break;
+            case 2:
+                scanner.nextLine();  // Consomme le retour à la ligne résiduel
+                System.out.println("Entrez le nom du fichier de votre sauvegarde (exemple: test.txt)");
+                String nom = scanner.nextLine();
+                World wR = new World(nom);
+                w = wR;
+                break;
+        }
         
         // Interface graphique
         WorldGUI gui = new WorldGUI(w);
         gui.setVisible(true);
         
-        int nbTour = 1;
+        int nbTour = 1;     //à changer si le jeu est chargé
         while(true){
             w.tourDeJeu(nbTour, gui);
             nbTour++;
             SwingUtilities.invokeLater(gui::afficherMonde); // Rafraîchir l'interface graphique
+            System.out.println("Voulez vous charger (tapez c) ou sauvegarder (tapez s) votre partie ?");
+            w.save("test.txt");
         }
     }
 }
